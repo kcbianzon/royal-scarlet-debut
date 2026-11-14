@@ -1,0 +1,1297 @@
+:root {
+  --bg-obsidian: #070304;
+  --bg-velvet: #120407;
+  --crimson-deep: #4a040d;
+  --crimson-royal: #8b0018;
+  --crimson-bright: #b80f28;
+  --gold-dark: #8a6621;
+  --gold-primary: #d4af37;
+  --gold-light: #f5e29c;
+  --gold-champagne: #f9efd4;
+  --ink-burgundy: #3d050b;
+  --font-script: 'Great Vibes', cursive;
+  --font-display: 'Cinzel Decorative', serif;
+  --font-serif: 'Cinzel', serif;
+  --font-body: 'Cormorant Garamond', serif;
+  --font-ui: 'Montserrat', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-obsidian);
+  color: var(--gold-champagne);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+body {
+  background-color: var(--bg-obsidian);
+  background-image:
+    radial-gradient(circle at 50% 15%, rgba(139, 0, 24, 0.24) 0%, transparent 55%),
+    radial-gradient(circle at 50% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 60%);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body.gate-locked {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Fullscreen Three.js Background Canvas */
+#webgl-bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Cursor Candlelight Glow */
+#cursor-light {
+  position: fixed;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 226, 156, 0.16) 0%, rgba(139, 0, 24, 0.08) 45%, transparent 70%);
+  pointer-events: none;
+  z-index: 4;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
+}
+
+/* =========================================================
+   FLOATING TOP NAVIGATION & CONTROLS
+   ========================================================= */
+.royal-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 90;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 32px;
+  background: linear-gradient(180deg, rgba(7, 3, 4, 0.95) 0%, rgba(7, 3, 4, 0.6) 85%, transparent 100%);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+body.gate-locked .royal-nav {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-20px);
+}
+
+.nav-brand {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.22em;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-primary), var(--gold-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--gold-champagne);
+  text-decoration: none;
+  font-family: var(--font-serif);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  transition: all 0.3s ease;
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+
+.nav-links a:hover {
+  opacity: 1;
+  color: var(--gold-light);
+  background: rgba(212, 175, 55, 0.15);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.3);
+}
+
+.nav-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.gold-pill-btn {
+  background: linear-gradient(135deg, rgba(139, 0, 24, 0.72), rgba(18, 4, 7, 0.95));
+  border: 1px solid var(--gold-primary);
+  color: var(--gold-light);
+  font-family: var(--font-serif);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gold-pill-btn:hover {
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+  color: #120407;
+  box-shadow: 0 0 22px rgba(212, 175, 55, 0.65);
+}
+
+/* =========================================================
+   STAGE 1: MUSEUM-GRADE ENVELOPE ASSET & POP-OUT PARCHMENT CARD
+   ========================================================= */
+#envelope-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, rgba(48, 3, 10, 0.94) 0%, rgba(7, 3, 4, 0.99) 75%);
+  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+#envelope-gate.gate-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.gate-stage-indicator {
+  font-family: var(--font-serif);
+  font-size: clamp(0.75rem, 1.6vw, 0.92rem);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 14px;
+  text-shadow: 0 2px 15px rgba(212, 175, 55, 0.65);
+  text-align: center;
+}
+
+.envelope-stage-box {
+  position: relative;
+  width: min(680px, 94vw);
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1400px;
+}
+
+/* Closed Velvet & Satin Envelope Asset */
+.envelope-closed-artwork {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid rgba(212, 175, 55, 0.55);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.95),
+    0 0 50px rgba(212, 175, 55, 0.28);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.9s ease, opacity 0.9s ease;
+}
+
+.envelope-img-asset {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.envelope-stage-box.is-open .envelope-closed-artwork {
+  transform: translateY(70px) rotateX(28deg) scale(0.86);
+  filter: brightness(0.42) blur(2px);
+}
+
+/* Interactive Gold Rose Wax Seal Hotspot Centered on the Envelope Asset */
+.wax-seal-hotspot {
+  position: absolute;
+  left: 50%;
+  top: 51%;
+  transform: translate(-50%, -50%);
+  width: 118px;
+  height: 118px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 243, 184, 0.28) 0%, rgba(212, 175, 55, 0.1) 60%, transparent 75%);
+  border: 2px solid rgba(245, 226, 156, 0.85);
+  cursor: pointer;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.wax-seal-hotspot:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 0 45px rgba(245, 226, 156, 0.95);
+}
+
+.seal-ring-pulse {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 2px solid var(--gold-light);
+  animation: ringExpand 2.2s infinite ease-out;
+}
+
+@keyframes ringExpand {
+  0% { transform: scale(0.88); opacity: 0.95; }
+  100% { transform: scale(1.38); opacity: 0; }
+}
+
+.seal-tooltip {
+  position: absolute;
+  bottom: -36px;
+  white-space: nowrap;
+  background: rgba(7, 3, 4, 0.92);
+  border: 1px solid var(--gold-primary);
+  color: var(--gold-light);
+  font-family: var(--font-serif);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  padding: 5px 14px;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.9);
+}
+
+/* State 2: Pop-Out Carved 24k Baroque Gold & Parchment Card */
+.popout-card-artwork {
+  position: absolute;
+  width: min(440px, 84vw);
+  aspect-ratio: 3 / 4;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid var(--gold-primary);
+  box-shadow:
+    0 35px 90px rgba(0, 0, 0, 0.98),
+    0 0 65px rgba(212, 175, 55, 0.6);
+  opacity: 0;
+  transform: translateY(120px) scale(0.65);
+  pointer-events: none;
+  transition: all 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 10;
+}
+
+.envelope-stage-box.is-open .popout-card-artwork {
+  opacity: 1;
+  transform: translateY(-10px) scale(1);
+  pointer-events: auto;
+}
+
+.popout-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Typography Overlaid Precisely Inside the Blank Parchment Area of baroque_parchment_card.jpg */
+.popout-parchment-overlay {
+  position: absolute;
+  left: 25.5%;
+  right: 25.5%;
+  top: 25%;
+  bottom: 23.5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  padding: 10px 6px;
+  color: var(--ink-burgundy);
+}
+
+.letter-crest {
+  font-size: 1.05rem;
+  color: var(--gold-dark);
+  letter-spacing: 0.25em;
+}
+
+.letter-intro {
+  font-family: var(--font-script);
+  font-size: clamp(1.25rem, 2.8vw, 1.65rem);
+  color: var(--crimson-royal);
+  line-height: 1.15;
+}
+
+.letter-name {
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 4vw, 2.45rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--crimson-royal);
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px rgba(212, 175, 55, 0.4);
+}
+
+.letter-subtitle {
+  font-family: var(--font-serif);
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  color: var(--ink-burgundy);
+  text-transform: uppercase;
+}
+
+.letter-date-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid rgba(138, 102, 33, 0.55);
+  border-bottom: 1px solid rgba(138, 102, 33, 0.55);
+  padding: 4px 12px;
+  font-family: var(--font-serif);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: var(--ink-burgundy);
+}
+
+.letter-date-row strong {
+  font-size: 1.25rem;
+  color: var(--crimson-royal);
+}
+
+.letter-year {
+  font-family: var(--font-serif);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--ink-burgundy);
+}
+
+.gate-prompt {
+  margin-top: 18px;
+  font-family: var(--font-serif);
+  font-size: 0.82rem;
+  letter-spacing: 0.24em;
+  color: var(--gold-light);
+  text-transform: uppercase;
+}
+
+.enter-ballroom-btn {
+  margin-top: 16px;
+  padding: 14px 36px;
+  font-family: var(--font-serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #160407;
+  background: linear-gradient(135deg, #fff3bd 0%, #d4af37 50%, #9b721c 100%);
+  border: 2px solid #fff8db;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 32px rgba(212, 175, 55, 0.75);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: all 0.45s ease;
+  z-index: 15;
+}
+
+#envelope-gate.envelope-opened .enter-ballroom-btn {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.enter-ballroom-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.95), 0 0 48px rgba(245, 226, 156, 1);
+}
+
+/* =========================================================
+   MAIN SCROLLABLE CONTENT SECTIONS & VIEW-TIMELINE ANIMATIONS
+   ========================================================= */
+main#ballroom-experience {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+}
+
+.royal-section {
+  min-height: 100vh;
+  width: 100%;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 105px 24px 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Scroll-Driven Entry & Exit Animations (Modern Web Guidance compliant) */
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes royal-section-enter {
+      from {
+        opacity: 0.15;
+        transform: translateY(48px) scale(0.94);
+      }
+    }
+    @keyframes royal-section-exit {
+      to {
+        opacity: 0.25;
+        transform: translateY(-36px) scale(0.96);
+      }
+    }
+
+    .scroll-reveal-section {
+      animation:
+        royal-section-enter auto linear backwards,
+        royal-section-exit auto linear forwards;
+      animation-timeline: view();
+      animation-range: entry, exit;
+    }
+  }
+}
+
+/* Ornate Baroque Section Header Plaque */
+.baroque-plaque-header {
+  position: relative;
+  display: inline-block;
+  padding: 16px 52px;
+  background: linear-gradient(180deg, #1e050a 0%, #090204 100%);
+  border: 2px solid var(--gold-primary);
+  outline: 1px solid rgba(245, 226, 156, 0.45);
+  outline-offset: -6px;
+  border-radius: 999px;
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.95),
+    0 0 28px rgba(212, 175, 55, 0.3),
+    inset 0 0 22px rgba(139, 0, 24, 0.55);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.baroque-plaque-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.8vw, 2.05rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #fff5c3 0%, #d4af37 50%, #9b721c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.section-lead {
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  color: rgba(249, 239, 212, 0.85);
+  letter-spacing: 0.06em;
+  text-align: center;
+  max-width: 680px;
+  margin-bottom: 42px;
+}
+
+/* =========================================================
+   STAGE 2: HERO MASTERPIECE (CARVED OVAL GOLD FRAME + CURTAINS + LANTERNS)
+   ========================================================= */
+.hero-header-text {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.hero-date-tag {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  letter-spacing: 0.38em;
+  color: var(--gold-light);
+  margin-bottom: 6px;
+}
+
+.hero-debutante-name {
+  font-family: var(--font-serif);
+  font-size: clamp(3.2rem, 7vw, 5.4rem);
+  letter-spacing: 0.22em;
+  background: linear-gradient(180deg, #fff9de 0%, #d4af37 55%, #8a6415 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.95));
+  line-height: 1.05;
+}
+
+.hero-tagline {
+  font-family: var(--font-serif);
+  font-size: clamp(0.95rem, 2vw, 1.3rem);
+  letter-spacing: 0.4em;
+  color: var(--gold-champagne);
+  margin-top: 8px;
+  text-transform: uppercase;
+}
+
+.hero-masterpiece-frame {
+  position: relative;
+  width: min(640px, 94vw);
+  border-radius: 18px;
+  overflow: hidden;
+  border: 2px solid rgba(212, 175, 55, 0.55);
+  box-shadow:
+    0 35px 90px rgba(0, 0, 0, 0.98),
+    0 0 60px rgba(212, 175, 55, 0.32);
+  cursor: pointer;
+  transition: transform 0.25s ease-out, box-shadow 0.35s ease;
+}
+
+.hero-masterpiece-frame:hover {
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.98),
+    0 0 80px rgba(245, 226, 156, 0.55);
+}
+
+.hero-oval-asset-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Exact Smoked-Mirror Oval Interior Overlay */
+.oval-mirror-center-overlay {
+  position: absolute;
+  left: 31%;
+  right: 31%;
+  top: 29%;
+  bottom: 30%;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 18px;
+  pointer-events: none;
+}
+
+.empty-crown-icon {
+  font-size: 2.1rem;
+  color: var(--gold-primary);
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.65));
+}
+
+.empty-label-main {
+  font-family: var(--font-serif);
+  font-size: 1.55rem;
+  letter-spacing: 0.26em;
+  color: var(--gold-light);
+  text-transform: uppercase;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95);
+}
+
+.empty-label-sub {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: rgba(245, 226, 156, 0.78);
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+
+.hero-bottom-invite {
+  text-align: center;
+  margin-top: 26px;
+}
+
+.hero-bottom-invite p {
+  font-family: var(--font-serif);
+  font-size: 0.92rem;
+  letter-spacing: 0.3em;
+  color: var(--gold-champagne);
+  text-transform: uppercase;
+}
+
+.hero-bottom-invite h3 {
+  font-family: var(--font-script);
+  font-size: clamp(2.6rem, 5vw, 3.8rem);
+  color: var(--gold-light);
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+/* =========================================================
+   REUSABLE CARVED BAROQUE ASSET FRAME CARDS (`baroque_rect_frame.jpg`)
+   ========================================================= */
+.baroque-asset-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  box-shadow:
+    0 22px 55px rgba(0, 0, 0, 0.95),
+    0 0 32px rgba(212, 175, 55, 0.22);
+  cursor: pointer;
+  transition: transform 0.25s ease-out, box-shadow 0.35s ease;
+}
+
+.baroque-asset-card:hover {
+  box-shadow:
+    0 28px 65px rgba(0, 0, 0, 0.98),
+    0 0 48px rgba(245, 226, 156, 0.5);
+}
+
+.frame-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Coordinates of the Empty Bevelled Smoked-Mirror Center in `baroque_rect_frame.jpg` */
+.frame-inner-content {
+  position: absolute;
+  left: 20.5%;
+  right: 20.5%;
+  top: 25.5%;
+  bottom: 26%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+}
+
+/* =========================================================
+   STAGE 3: LIVE COUNTDOWN & LOCATION GUIDE
+   ========================================================= */
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 240px));
+  gap: 22px;
+  margin-bottom: 58px;
+  justify-content: center;
+  width: 100%;
+}
+
+.countdown-asset-card {
+  aspect-ratio: 4 / 3;
+}
+
+.countdown-num {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3.2vw, 2.75rem);
+  font-weight: 700;
+  background: linear-gradient(180deg, #fff9de 0%, #d4af37 65%, #8a6415 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.05;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.9));
+}
+
+.countdown-unit {
+  font-family: var(--font-serif);
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  color: var(--gold-champagne);
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+
+.location-panel {
+  width: 100%;
+  background: linear-gradient(145deg, rgba(64, 5, 14, 0.6) 0%, rgba(10, 2, 4, 0.95) 100%);
+  border: 2px solid var(--gold-primary);
+  border-radius: 18px;
+  padding: 48px 34px 38px;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.95), 0 0 35px rgba(212, 175, 55, 0.22);
+  display: grid;
+  grid-template-columns: 280px 1fr 280px;
+  gap: 32px;
+  align-items: center;
+}
+
+.location-frame-card {
+  aspect-ratio: 4 / 3;
+}
+
+.location-details-center {
+  text-align: center;
+  border-left: 1px solid rgba(212, 175, 55, 0.35);
+  border-right: 1px solid rgba(212, 175, 55, 0.35);
+  padding: 14px 24px;
+}
+
+.reception-time {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  letter-spacing: 0.24em;
+  color: var(--gold-light);
+  margin-bottom: 14px;
+}
+
+.venue-placeholder-title {
+  font-family: var(--font-serif);
+  font-size: 1.65rem;
+  letter-spacing: 0.14em;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.venue-placeholder-address {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  color: rgba(249, 239, 212, 0.82);
+  margin-bottom: 24px;
+}
+
+/* =========================================================
+   STAGE 4: CARVED BAROQUE PORTRAIT & FILM GALLERY
+   ========================================================= */
+.gallery-wall-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.22fr 1fr;
+  gap: 28px;
+  width: 100%;
+  align-items: center;
+  margin-bottom: 36px;
+}
+
+.gallery-col {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.gallery-frame-md {
+  aspect-ratio: 4 / 3;
+}
+
+.gallery-frame-sm {
+  aspect-ratio: 16 / 10;
+}
+
+.gallery-frame-lg {
+  aspect-ratio: 4 / 5;
+}
+
+.video-asset-frame {
+  width: 100%;
+  max-width: 920px;
+  aspect-ratio: 16 / 9;
+}
+
+.play-btn-circle {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 2px solid var(--gold-light);
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.42) 0%, rgba(18, 4, 7, 0.9) 100%);
+  box-shadow: 0 0 28px rgba(212, 175, 55, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--gold-light);
+  margin-bottom: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-asset-frame:hover .play-btn-circle {
+  transform: scale(1.12);
+  box-shadow: 0 0 45px rgba(245, 226, 156, 1);
+}
+
+.video-scrubber-bar {
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  color: var(--gold-light);
+}
+
+.scrubber-track {
+  flex: 1;
+  height: 4px;
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 999px;
+  position: relative;
+}
+
+.scrubber-progress {
+  width: 35%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+  border-radius: 999px;
+  position: relative;
+}
+
+.scrubber-knob {
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--gold-light);
+  box-shadow: 0 0 10px var(--gold-light);
+}
+
+/* =========================================================
+   STAGE 5: ENCHANTED ROSE CLOCHE MASTERPIECE & BAROQUE PLAQUES
+   ========================================================= */
+.program-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 26px;
+}
+
+.program-tab-btn {
+  padding: 11px 26px;
+  border-radius: 999px;
+  border: 1px solid var(--gold-primary);
+  background: rgba(18, 4, 7, 0.9);
+  color: var(--gold-champagne);
+  font-family: var(--font-serif);
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.program-tab-btn.active,
+.program-tab-btn:hover {
+  background: linear-gradient(135deg, #fff3b8 0%, #d4af37 55%, #8a6621 100%);
+  color: #140306;
+  font-weight: 700;
+  box-shadow: 0 0 28px rgba(212, 175, 55, 0.75);
+}
+
+/* Enchanted Rose Cloche Masterpiece Banner + Live 3D Particle Canvas Overlay */
+.rose-cloche-masterpiece {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  aspect-ratio: 16 / 9;
+  margin: 0 auto 40px;
+  border-radius: 18px;
+  border: 2px solid var(--gold-primary);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.98),
+    0 0 55px rgba(212, 175, 55, 0.32);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.cloche-masterpiece-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.8s ease, filter 0.6s ease;
+}
+
+#rose-dome-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.cloche-hint {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(7, 3, 4, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  padding: 6px 18px;
+  border-radius: 999px;
+  font-family: var(--font-serif);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  color: var(--gold-light);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Twin Carved Baroque Gold Parchment Plaques */
+.scrolls-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 36px;
+  width: 100%;
+}
+
+.baroque-parchment-plaque {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid rgba(212, 175, 55, 0.55);
+  box-shadow:
+    0 30px 75px rgba(0, 0, 0, 0.96),
+    0 0 42px rgba(212, 175, 55, 0.28);
+}
+
+.plaque-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Exact Blank Cream Parchment Coordinates Inside `baroque_parchment_card.jpg` */
+.plaque-parchment-content {
+  position: absolute;
+  left: 25.5%;
+  right: 25.5%;
+  top: 25%;
+  bottom: 23.5%;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 10px;
+  color: var(--ink-burgundy);
+  overflow: hidden;
+}
+
+.scroll-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-align: center;
+  color: var(--crimson-royal);
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(138, 102, 33, 0.5);
+  padding-bottom: 6px;
+}
+
+.blank-18-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.blank-18-list li {
+  font-family: var(--font-serif);
+  font-size: clamp(0.58rem, 0.95vw, 0.72rem);
+  color: var(--ink-burgundy);
+  border-bottom: 1px dashed rgba(61, 5, 11, 0.35);
+  padding: 1px 2px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+/* =========================================================
+   STAGE 6: 3D MATERIAL ORBS & ROYAL RSVP PARCHMENT MASTERPIECE
+   ========================================================= */
+.orbs-showcase-wrapper {
+  width: 100%;
+  max-width: 860px;
+  margin-bottom: 48px;
+  text-align: center;
+}
+
+#orbs-canvas {
+  width: 100%;
+  height: 240px;
+  display: block;
+  cursor: grab;
+}
+
+.orbs-labels-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.orb-label-item h4 {
+  font-family: var(--font-serif);
+  font-size: 0.92rem;
+  letter-spacing: 0.18em;
+  color: var(--gold-light);
+}
+
+.orb-label-item p {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: rgba(249, 239, 212, 0.72);
+  margin-top: 4px;
+}
+
+/* RSVP Grid: Interactive Baroque Parchment Card + Full Visual Concept Preview */
+.rsvp-masterpiece-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 36px;
+  width: 100%;
+  max-width: 1040px;
+  align-items: center;
+}
+
+.rsvp-parchment-frame {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid var(--gold-primary);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.96),
+    0 0 45px rgba(212, 175, 55, 0.32);
+}
+
+.rsvp-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.rsvp-parchment-overlay {
+  position: absolute;
+  left: 25.5%;
+  right: 25.5%;
+  top: 25%;
+  bottom: 23.5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 8px;
+  color: var(--ink-burgundy);
+}
+
+.rsvp-form-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 2.2vw, 1.55rem);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--crimson-royal);
+  text-align: center;
+}
+
+.rsvp-field label {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--ink-burgundy);
+  margin-bottom: 2px;
+}
+
+.rsvp-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.35);
+  border: none;
+  border-bottom: 1.5px solid var(--crimson-royal);
+  color: var(--ink-burgundy);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 4px 6px;
+  outline: none;
+}
+
+.rsvp-input::placeholder {
+  color: rgba(61, 5, 11, 0.55);
+}
+
+.rsvp-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rsvp-radio-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-serif);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ink-burgundy);
+  cursor: pointer;
+}
+
+.rsvp-radio-option input {
+  accent-color: var(--crimson-royal);
+}
+
+/* Interactive Wax Stamp Inside RSVP Card */
+.wax-stamp-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.brass-stamp-handle {
+  width: 38px;
+  height: 44px;
+  background: linear-gradient(90deg, #5e420e 0%, #f5e29c 45%, #d4af37 65%, #4a3205 100%);
+  border-radius: 18px 18px 6px 6px;
+  border: 1.5px solid var(--gold-light);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.65);
+  margin-bottom: -10px;
+  z-index: 3;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  color: #3d2602;
+}
+
+.wax-stamp-zone.stamping .brass-stamp-handle {
+  transform: translateY(18px) scale(0.94);
+}
+
+.molten-wax-btn {
+  width: 105px;
+  height: 105px;
+  border-radius: 47% 53% 51% 49% / 52% 46% 54% 48%;
+  background: radial-gradient(circle at 35% 35%, #ff2a4b 0%, #9e001a 52%, #4a000b 90%);
+  border: 2.5px solid var(--gold-primary);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.8),
+    0 0 22px rgba(184, 15, 40, 0.65),
+    inset 0 3px 10px rgba(255, 190, 190, 0.45);
+  color: var(--gold-light);
+  font-family: var(--font-serif);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.35s ease;
+  z-index: 2;
+}
+
+.molten-wax-btn:hover {
+  transform: scale(1.07);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.9), 0 0 32px rgba(212, 175, 55, 0.85);
+}
+
+.molten-wax-btn.sealed {
+  background: radial-gradient(circle at 35% 35%, #fff2b2 0%, #d4af37 50%, #785510 95%);
+  color: #291802;
+  box-shadow: 0 0 38px rgba(245, 226, 156, 0.95);
+}
+
+.rsvp-reference-preview {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid var(--gold-primary);
+  box-shadow: 0 30px 75px rgba(0, 0, 0, 0.96), 0 0 40px rgba(212, 175, 55, 0.25);
+  cursor: pointer;
+}
+
+.rsvp-ref-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* =========================================================
+   LIGHT-DISMISS MODAL DIALOG (`<dialog closedby="any">`)
+   ========================================================= */
+dialog.frame-lightbox-dialog {
+  margin: auto;
+  border: none;
+  background: transparent;
+  padding: 0;
+  max-width: min(560px, 92vw);
+  color: var(--gold-champagne);
+}
+
+dialog.frame-lightbox-dialog::backdrop {
+  background-color: rgba(7, 3, 4, 0.86);
+  backdrop-filter: blur(10px);
+}
+
+.lightbox-card {
+  padding: 34px 30px;
+  background: linear-gradient(160deg, #1b0509 0%, #080203 100%);
+  border: 3px solid var(--gold-primary);
+  outline: 1px solid rgba(245, 226, 156, 0.4);
+  outline-offset: -8px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 30px 75px rgba(0, 0, 0, 0.98), 0 0 45px rgba(212, 175, 55, 0.4);
+}
+
+.lightbox-card h3 {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  letter-spacing: 0.2em;
+  color: var(--gold-light);
+  margin-bottom: 12px;
+}
+
+.lightbox-card p {
+  font-size: 1.1rem;
+  color: var(--gold-champagne);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+@media (max-width: 960px) {
+  .location-panel {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+  .location-frame-card {
+    width: min(340px, 100%);
+  }
+  .location-details-center {
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid rgba(212, 175, 55, 0.35);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.35);
+    padding: 20px 10px;
+  }
+  .gallery-wall-grid {
+    grid-template-columns: 1fr;
+  }
+  .rsvp-masterpiece-grid {
+    grid-template-columns: 1fr;
+  }
+  .countdown-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .nav-links {
+    display: none;
+  }
+}

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NAME — A Decade and Eight | Royal Scarlet 3D Debut Invitation</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body class="gate-locked">
+
+  <!-- Full-Viewport Three.js WebGL Canvas (3D Falling Crimson Rose Petals, Gold Embers & Candlelight) -->
+  <canvas id="webgl-bg-canvas"></canvas>
+
+  <!-- Interactive Cursor Candlelight Torch -->
+  <div id="cursor-light"></div>
+
+  <!-- Top Floating Royal Navigation Bar -->
+  <nav class="royal-nav">
+    <div class="nav-brand">⚜ ROYAL SCARLET • XVIII ⚜</div>
+    <ul class="nav-links">
+      <li><a href="#hero-section">01. Hero</a></li>
+      <li><a href="#location-section">02. Countdown &amp; Venue</a></li>
+      <li><a href="#gallery-section">03. Portrait Gallery</a></li>
+      <li><a href="#program-section">04. 18th Program</a></li>
+      <li><a href="#rsvp-section">05. Attire &amp; RSVP</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button id="replay-envelope-btn" class="gold-pill-btn" title="Replay Envelope Opening">
+        <span>✉️</span> Replay Letter
+      </button>
+      <button id="audio-toggle-btn" class="gold-pill-btn" title="Toggle Royal Waltz Ambience">
+        <span id="audio-icon">🔇</span> <span id="audio-label">Sound Off</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- =================================================================
+       STAGE 1: MUSEUM-GRADE 3D WAX-SEALED ENVELOPE & POP-OUT LETTER GATE
+       ================================================================= -->
+  <section id="envelope-gate">
+    <div id="gate-stage-text" class="gate-stage-indicator">
+      State 1: Closed Royal Envelope • Click the Embossed Gold Rose Wax Seal
+    </div>
+
+    <div id="envelope-stage-box" class="envelope-stage-box">
+      <!-- State 1 Asset: Photorealistic Black Velvet & Crimson Satin Envelope with Gold Filigree & Wax Seal -->
+      <div class="envelope-closed-artwork tilt-frame">
+        <img
+          src="./assets/royal_envelope_closed.jpg"
+          alt="Royal Black Velvet and Crimson Satin Envelope with Gold Filigree and Rose Wax Seal"
+          fetchpriority="high"
+          width="960"
+          height="720"
+          class="envelope-img-asset"
+        />
+        <!-- Interactive Hotspot Directly Over the Embossed Gold Rose Wax Seal -->
+        <button id="wax-seal-open-btn" class="wax-seal-hotspot" aria-label="Click Gold Rose Wax Seal to Open Invitation">
+          <span class="seal-ring-pulse"></span>
+          <span class="seal-tooltip">CLICK WAX SEAL TO OPEN</span>
+        </button>
+      </div>
+
+      <!-- State 2 Asset: Pop-Out Carved 24k Baroque Gold & Parchment Invitation Card -->
+      <div id="popout-card-artwork" class="popout-card-artwork">
+        <img
+          src="./assets/baroque_parchment_card.jpg"
+          alt="Ornate 24k Baroque Gold Frame with Royal Parchment Invitation Card"
+          fetchpriority="low"
+          width="720"
+          height="960"
+          class="popout-card-img"
+        />
+        <!-- Crisp Live Typography Overlaid on the Blank Parchment Interior -->
+        <div class="popout-parchment-overlay">
+          <div class="letter-crest">⚜ 👑 ⚜</div>
+          <p class="letter-intro">You are invited<br/>to the celebration of</p>
+          <div class="letter-name">NAME</div>
+          <div class="letter-subtitle">A Decade and Eight</div>
+          <div class="letter-date-row">
+            <span>SAT</span>
+            <strong>00</strong>
+            <span>MONTH</span>
+          </div>
+          <div class="letter-year">0000 • [ VENUE CITY ]</div>
+        </div>
+      </div>
+    </div>
+
+    <p id="gate-prompt-label" class="gate-prompt">Click the Gold Rose Wax Seal on the Envelope</p>
+
+    <button id="enter-ballroom-btn" class="enter-ballroom-btn">
+      ✨ Enter The Royal Ballroom ✨
+    </button>
+  </section>
+
+  <!-- =================================================================
+       MAIN SCROLLABLE 3D BALLROOM EXPERIENCE
+       ================================================================= -->
+  <main id="ballroom-experience">
+
+    <!-- STAGE 2: HERO SECTION WITH MUSEUM BAROQUE OVAL GOLD FRAME, CURTAINS & LANTERNS -->
+    <section id="hero-section" class="royal-section scroll-reveal-section">
+      <div class="hero-header-text">
+        <div class="hero-date-tag">00 . 00 . 0000</div>
+        <h1 class="hero-debutante-name">NAME</h1>
+        <p class="hero-tagline">A Decade and Eight</p>
+      </div>
+
+      <!-- High-Resolution Carved Baroque Oval Frame with Parted Velvet Curtains, Glowing Lanterns & Red Roses -->
+      <div
+        class="hero-masterpiece-frame tilt-frame"
+        data-frame-title="[ DEBUTANTE MAIN PORTRAIT ]"
+        data-frame-desc="Central 24k Baroque Oval Gold Mirror Frame with royal crown crest, parted crimson velvet curtains, glowing brass lanterns, and crimson/gold rose garland."
+      >
+        <img
+          src="./assets/baroque_oval_frame.jpg"
+          alt="Ornate 24k Baroque Gold Oval Mirror Frame with Parted Crimson Velvet Curtains and Lanterns"
+          fetchpriority="high"
+          width="800"
+          height="1000"
+          class="hero-oval-asset-img"
+        />
+        <!-- Smoked-Mirror Empty Center Overlay -->
+        <div class="oval-mirror-center-overlay">
+          <div class="empty-crown-icon">♛</div>
+          <div class="empty-label-main">EMPTY</div>
+          <div class="empty-label-sub">[ DEBUTANTE PORTRAIT ]</div>
+        </div>
+      </div>
+
+      <div class="hero-bottom-invite">
+        <p>You're Invited to the Debut of</p>
+        <h3>[ Debutante Name ]</h3>
+      </div>
+    </section>
+
+    <!-- STAGE 3: LIVE COUNTDOWN & LOCATION GUIDE (CARVED BAROQUE FRAMES) -->
+    <section id="location-section" class="royal-section scroll-reveal-section">
+      <div class="baroque-plaque-header">
+        <h2>The Royal Countdown</h2>
+      </div>
+      <p class="section-lead">Counting down every second until the grand eighteenth celebration.</p>
+
+      <!-- 4 Carved Baroque Gold Frame Countdown Cards -->
+      <div class="countdown-grid">
+        <div class="baroque-asset-card countdown-asset-card">
+          <img src="./assets/baroque_rect_frame.jpg" alt="" loading="lazy" width="400" height="300" class="frame-bg-img" />
+          <div class="frame-inner-content">
+            <div id="cd-days" class="countdown-num">18</div>
+            <div class="countdown-unit">Days</div>
+          </div>
+        </div>
+        <div class="baroque-asset-card countdown-asset-card">
+          <img src="./assets/baroque_rect_frame.jpg" alt="" loading="lazy" width="400" height="300" class="frame-bg-img" />
+          <div class="frame-inner-content">
+            <div id="cd-hours" class="countdown-num">08</div>
+            <div class="countdown-unit">Hours</div>
+          </div>
+        </div>
+        <div class="baroque-asset-card countdown-asset-card">
+          <img src="./assets/baroque_rect_frame.jpg" alt="" loading="lazy" width="400" height="300" class="frame-bg-img" />
+          <div class="frame-inner-content">
+            <div id="cd-mins" class="countdown-num">45</div>
+            <div class="countdown-unit">Minutes</div>
+          </div>
+        </div>
+        <div class="baroque-asset-card countdown-asset-card">
+          <img src="./assets/baroque_rect_frame.jpg" alt="" loading="lazy" width="400" height="300" class="frame-bg-img" />
+          <div class="frame-inner-content">
+            <div id="cd-secs" class="countdown-num">12</div>
+            <div class="countdown-unit">Seconds</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Location Guide Plaque -->
+      <div class="baroque-plaque-header" style="margin-bottom: -22px; z-index: 5;">
+        <h2>Location Guide</h2>
+      </div>
+
+      <div class="location-panel">
+        <!-- Left: Carved Baroque Gold Frame for QR Code -->
+        <div
+          class="baroque-asset-card location-frame-card tilt-frame"
+          data-frame-title="[ VENUE QR CODE ]"
+          data-frame-desc="Carved 24k Baroque gold frame reserved for your Waze or Google Maps QR code."
+        >
+          <img src="./assets/baroque_rect_frame.jpg" alt="Baroque Gold QR Frame" loading="lazy" width="480" height="360" class="frame-bg-img" />
+          <div class="frame-inner-content">
+            <div class="empty-crown-icon" style="font-size: 1.4rem; margin-bottom: 4px;">⊞</div>
+            <div class="empty-label-main" style="font-size: 0.95rem;">[ QR CODE ]</div>
+            <div class="empty-label-sub" style="font-size: 0.62rem;">SCAN FOR MAP</div>
+          </div>
+        </div>
+
+        <!-- Center: Reception & Venue Details -->
+        <div class="location-details-center">
+          <div class="reception-time">RECEPTION | 0:00 PM</div>
+          <div class="venue-placeholder-title">[ VENUE NAME &amp; BALLROOM ]</div>
+          <div class="venue-placeholder-address">[ Street Address, City, Province / Country ]</div>
+          <button
+            class="gold-pill-btn"
+            style="padding: 12px 30px; font-size: 0.82rem;"
+            data-frame-title="[ INTERACTIVE VENUE MAP ]"
+            data-frame-desc="Opens the direct Google Maps / Waze route to [ VENUE NAME & BALLROOM ]."
+            id="view-map-btn"
+          >
+            📍 VIEW MAP
+          </button>
+        </div>
+
+        <!-- Right: Carved Baroque Gold Frame for Venue Photo -->
+        <div
+          class="baroque-asset-card location-frame-card tilt-frame"
+          data-frame-title="[ VENUE PHOTOGRAPH ]"
+          data-frame-desc="Carved 24k Baroque gold frame reserved for a photograph of the grand ballroom or venue exterior."
+        >
+          <img src="./assets/baroque_rect_frame.jpg" alt="Baroque Gold Venue Frame" loading="lazy" width="480" height="360" class="frame-bg-img" />
+          <div class="frame-inner-content">
+            <div class="empty-crown-icon" style="font-size: 1.4rem; margin-bottom: 4px;">🏛️</div>
+            <div class="empty-label-main" style="font-size: 0.95rem;">EMPTY</div>
+            <div class="empty-label-sub" style="font-size: 0.62rem;">[ VENUE PHOTO ]</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 4: 3D FLOATING BAROQUE EMPTY-FRAME PORTRAIT & FILM GALLERY -->
+    <section id="gallery-section" class="royal-section scroll-reveal-section">
+      <div class="baroque-plaque-header">
+        <h2>Royal Portrait &amp; Film Gallery</h2>
+      </div>
+      <p class="section-lead">Museum-grade carved 24k Baroque gold frames with empty smoked-mirror interiors ready for your pre-debut portraits and film teaser. Click any frame to inspect.</p>
+
+      <div class="gallery-wall-grid">
+        <!-- Left Column -->
+        <div class="gallery-col">
+          <div
+            class="baroque-asset-card gallery-frame-md tilt-frame"
+            data-frame-title="[ PHOTO 01 — PORTRAIT ]"
+            data-frame-desc="Upper-left carved Baroque gold frame — Empty smoked-mirror placeholder ready for Pre-Debut Portrait 01."
+          >
+            <img src="./assets/baroque_rect_frame.jpg" alt="Empty Baroque Frame 01" loading="lazy" width="600" height="450" class="frame-bg-img" />
+            <div class="frame-inner-content">
+              <div class="empty-label-main" style="font-size: 1.05rem;">EMPTY</div>
+              <div class="empty-label-sub">[ PHOTO 01 ]</div>
+            </div>
+          </div>
+
+          <div
+            class="baroque-asset-card gallery-frame-sm tilt-frame"
+            data-frame-title="[ PHOTO 04 — DETAIL SHOT ]"
+            data-frame-desc="Lower-left carved Baroque gold frame — Empty smoked-mirror placeholder ready for Pre-Debut Portrait 04."
+          >
+            <img src="./assets/baroque_rect_frame.jpg" alt="Empty Baroque Frame 04" loading="lazy" width="600" height="450" class="frame-bg-img" />
+            <div class="frame-inner-content">
+              <div class="empty-label-main" style="font-size: 0.92rem;">EMPTY</div>
+              <div class="empty-label-sub">[ PHOTO 04 ]</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center Column (Grand Oval & Portrait Frame) -->
+        <div class="gallery-col">
+          <div
+            class="baroque-asset-card gallery-frame-lg tilt-frame"
+            data-frame-title="[ PHOTO 02 — CENTERPIECE PORTRAIT ]"
+            data-frame-desc="Central grand carved Baroque gold frame — Empty smoked-mirror placeholder ready for Pre-Debut Portrait 02."
+          >
+            <img src="./assets/baroque_oval_frame.jpg" alt="Empty Baroque Centerpiece Frame 02" loading="lazy" width="640" height="800" class="frame-bg-img" />
+            <div class="frame-inner-content">
+              <div class="empty-crown-icon" style="font-size: 1.5rem;">♛</div>
+              <div class="empty-label-main" style="font-size: 1.2rem;">EMPTY</div>
+              <div class="empty-label-sub">[ PHOTO 02 ]</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="gallery-col">
+          <div
+            class="baroque-asset-card gallery-frame-sm tilt-frame"
+            data-frame-title="[ PHOTO 05 — DETAIL SHOT ]"
+            data-frame-desc="Upper-right carved Baroque gold frame — Empty smoked-mirror placeholder ready for Pre-Debut Portrait 05."
+          >
+            <img src="./assets/baroque_rect_frame.jpg" alt="Empty Baroque Frame 05" loading="lazy" width="600" height="450" class="frame-bg-img" />
+            <div class="frame-inner-content">
+              <div class="empty-label-main" style="font-size: 0.92rem;">EMPTY</div>
+              <div class="empty-label-sub">[ PHOTO 05 ]</div>
+            </div>
+          </div>
+
+          <div
+            class="baroque-asset-card gallery-frame-md tilt-frame"
+            data-frame-title="[ PHOTO 03 — PORTRAIT ]"
+            data-frame-desc="Lower-right carved Baroque gold frame — Empty smoked-mirror placeholder ready for Pre-Debut Portrait 03."
+          >
+            <img src="./assets/baroque_rect_frame.jpg" alt="Empty Baroque Frame 03" loading="lazy" width="600" height="450" class="frame-bg-img" />
+            <div class="frame-inner-content">
+              <div class="empty-label-main" style="font-size: 1.05rem;">EMPTY</div>
+              <div class="empty-label-sub">[ PHOTO 03 ]</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wide Horizontal Carved Baroque Video Player Frame -->
+      <div
+        class="baroque-asset-card video-asset-frame tilt-frame"
+        data-frame-title="[ PRE-DEBUT FILM TEASER ]"
+        data-frame-desc="Wide horizontal carved 24k Baroque gold cinema frame for embedding the pre-debut save-the-date video."
+      >
+        <img src="./assets/baroque_rect_frame.jpg" alt="Baroque Gold Pre-Debut Film Frame" loading="lazy" width="960" height="540" class="frame-bg-img" />
+        <div class="frame-inner-content video-inner-overlay">
+          <div class="play-btn-circle">▶</div>
+          <div class="empty-label-main" style="font-size: 1.25rem;">EMPTY VIDEO FRAME</div>
+          <div class="empty-label-sub">[ PRE-DEBUT FILM ]</div>
+
+          <div class="video-scrubber-bar">
+            <span>▶</span>
+            <div class="scrubber-track">
+              <div class="scrubber-progress">
+                <div class="scrubber-knob"></div>
+              </div>
+            </div>
+            <span>00:00 / 03:18</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 5: THE 18TH PROGRAM — ENCHANTED ROSE CLOCHE MASTERPIECE & BAROQUE PARCHMENT PLAQUES -->
+    <section id="program-section" class="royal-section scroll-reveal-section">
+      <div class="baroque-plaque-header">
+        <h2>The 18th Program</h2>
+      </div>
+      <p class="section-lead">Select a category below to illuminate the Enchanted Crimson &amp; Gold Rose Cloche and reveal the ornate Baroque gold parchment plaques.</p>
+
+      <!-- Interactive Category Tabs -->
+      <div class="program-tabs">
+        <button class="program-tab-btn active" data-program="roses">[ 18 ROSES ]</button>
+        <button class="program-tab-btn" data-program="candles">[ 18 CANDLES ]</button>
+        <button class="program-tab-btn" data-program="treasures">[ 18 TREASURES ]</button>
+        <button class="program-tab-btn" data-program="bills">[ 18 BLUE BILLS ]</button>
+      </div>
+
+      <!-- Enchanted Rose Cloche & Candelabras Masterpiece Stage + Live 3D Particle/Candlelight Canvas -->
+      <div class="rose-cloche-masterpiece tilt-frame" data-frame-title="THE ENCHANTED CRIMSON & GOLD ROSE CLOCHE" data-frame-desc="Interactive centerpiece featuring the levitating 24k gold-trimmed crimson rose inside a crystal bell jar flanked by lit golden candelabras.">
+        <img
+          src="./assets/enchanted_rose_cloche.jpg"
+          alt="Enchanted Crimson and Gold Rose in Crystal Bell Jar with Lit Golden Candelabras"
+          loading="lazy"
+          width="1280"
+          height="720"
+          class="cloche-masterpiece-img"
+        />
+        <canvas id="rose-dome-canvas"></canvas>
+        <div class="cloche-hint">✨ Move Cursor or Click Tabs Above to Illuminate the Candelabras &amp; Rose Cloche ✨</div>
+      </div>
+
+      <!-- Twin Carved 24k Baroque Gold Parchment Plaques (Blank Template Lines) -->
+      <div class="scrolls-container">
+        <!-- Left Baroque Parchment Plaque -->
+        <div class="baroque-parchment-plaque tilt-frame" data-frame-title="18TH PROGRAM PLAQUE — LEFT" data-frame-desc="Carved 24k Baroque gold frame with blank vintage parchment lines for 01–18.">
+          <img
+            src="./assets/baroque_parchment_card.jpg"
+            alt="Ornate Baroque Gold Frame with Blank Parchment"
+            loading="lazy"
+            width="720"
+            height="960"
+            class="plaque-bg-img"
+          />
+          <div class="plaque-parchment-content">
+            <h3 id="scroll-left-title" class="scroll-title">18 ROSES</h3>
+            <ul id="scroll-left-list" class="blank-18-list"></ul>
+          </div>
+        </div>
+
+        <!-- Right Baroque Parchment Plaque -->
+        <div class="baroque-parchment-plaque tilt-frame" data-frame-title="18TH PROGRAM PLAQUE — RIGHT" data-frame-desc="Carved 24k Baroque gold frame with blank vintage parchment lines for 01–18.">
+          <img
+            src="./assets/baroque_parchment_card.jpg"
+            alt="Ornate Baroque Gold Frame with Blank Parchment"
+            loading="lazy"
+            width="720"
+            height="960"
+            class="plaque-bg-img"
+          />
+          <div class="plaque-parchment-content">
+            <h3 id="scroll-right-title" class="scroll-title">18 CANDLES</h3>
+            <ul id="scroll-right-list" class="blank-18-list"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 6: 3D MATERIAL ORBS (ATTIRE & GIFT GUIDE) + WAX-STAMP RSVP FINALE -->
+    <section id="rsvp-section" class="royal-section scroll-reveal-section">
+      <div class="baroque-plaque-header">
+        <h2>Attire &amp; Gift Guide</h2>
+      </div>
+      <p class="section-lead">We kindly request our guests to dress in formal evening attire following our Royal Scarlet, 24k Gold &amp; Obsidian Black palette.</p>
+
+      <!-- Real-Time Three.js 3D PBR Material Swatch Orbs -->
+      <div class="orbs-showcase-wrapper">
+        <canvas id="orbs-canvas"></canvas>
+        <div class="orbs-labels-grid">
+          <div class="orb-label-item">
+            <h4>ROYAL CRIMSON</h4>
+            <p>Satin &amp; Silk Sheen</p>
+          </div>
+          <div class="orb-label-item">
+            <h4>24K BRUSHED GOLD</h4>
+            <p>Metallic Filigree &amp; Accents</p>
+          </div>
+          <div class="orb-label-item">
+            <h4>OBSIDIAN BLACK</h4>
+            <p>Velvet &amp; Formal Attire</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Wax-Stamp RSVP Finale Card -->
+      <div class="rsvp-masterpiece-grid">
+        <!-- Left: Carved Baroque Gold & Parchment RSVP Card -->
+        <div class="rsvp-parchment-frame">
+          <img
+            src="./assets/baroque_parchment_card.jpg"
+            alt="Baroque Gold Royal RSVP Parchment Card"
+            loading="lazy"
+            width="720"
+            height="960"
+            class="rsvp-bg-img"
+          />
+          <div class="rsvp-parchment-overlay">
+            <div class="letter-crest">⚜ 👑 ⚜</div>
+            <h3 class="rsvp-form-title">ROYAL RSVP</h3>
+
+            <div class="rsvp-field">
+              <label for="rsvp-guest-name">GUEST NAME (TEMPLATE PLACEHOLDER)</label>
+              <input id="rsvp-guest-name" type="text" class="rsvp-input" placeholder="[ Enter Guest Name Here ]" />
+            </div>
+
+            <div class="rsvp-radio-group">
+              <label class="rsvp-radio-option">
+                <input type="radio" name="rsvp-status" value="attending" checked />
+                <span>GLADLY ATTENDING</span>
+              </label>
+              <label class="rsvp-radio-option">
+                <input type="radio" name="rsvp-status" value="declining" />
+                <span>REGRETFULLY DECLINES</span>
+              </label>
+            </div>
+
+            <div class="rsvp-field">
+              <label for="rsvp-seats">RESERVED SEATS</label>
+              <input id="rsvp-seats" type="text" class="rsvp-input" value="[ 01 ]" />
+            </div>
+
+            <div class="rsvp-field">
+              <label for="rsvp-wish">WISH FOR [ NAME ]</label>
+              <input id="rsvp-wish" type="text" class="rsvp-input" placeholder="[ Write a royal wish... ]" />
+            </div>
+
+            <!-- Interactive 3D Wax Stamp Button Inside the Parchment Footer -->
+            <div id="wax-stamp-zone" class="wax-stamp-zone">
+              <div class="brass-stamp-handle">⚜</div>
+              <button id="stamp-rsvp-btn" type="button" class="molten-wax-btn">
+                CLICK TO<br/>STAMP &amp; SEAL<br/>RSVP
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Full Visual Design Flow Reference Card Showcase -->
+        <div class="rsvp-reference-preview tilt-frame" data-frame-title="ROYAL RSVP & ATTIRE CONCEPT" data-frame-desc="Full-bleed visual reference showing the 3D engraved brass wax stamp, molten crimson-gold wax seal, and 3D fabric orbs.">
+          <img
+            src="./assets/flow_4_reference.jpg"
+            alt="Royal Scarlet Attire, Location Guide and Brass Wax Stamp Concept"
+            loading="lazy"
+            width="720"
+            height="1280"
+            class="rsvp-ref-img"
+          />
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Native HTML <dialog closedby="any"> Modal for Frame Inspection -->
+  <dialog id="frame-lightbox" closedby="any" aria-labelledby="lightbox-title" class="frame-lightbox-dialog">
+    <form method="dialog" class="lightbox-card">
+      <div class="letter-crest" style="margin-bottom: 8px;">⚜ ♛ ⚜</div>
+      <h3 id="lightbox-title">[ EMPTY FRAME PLACEHOLDER ]</h3>
+      <p id="lightbox-desc">This carved 24k Baroque gold frame is a clean template slot ready for your image or video.</p>
+      <button id="lightbox-close-btn" type="submit" class="gold-pill-btn" style="padding: 10px 28px;">Close Preview</button>
+    </form>
+  </dialog>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
