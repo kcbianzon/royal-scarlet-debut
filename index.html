@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
   <title>Rhian Jade Bianzon — A Decade and Eight | January 9, 2027</title>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -10,496 +10,252 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./style.css" />
 </head>
-<body class="gate-locked">
+<body class="locked-at-entrance">
 
-  <!-- Top Scroll Progress Bar (`scroll-progress-indicator` guide) -->
+  <!-- Top Scroll/Walk Progress Indicator -->
   <div id="progress" aria-hidden="true"></div>
 
-  <!-- Full-Viewport Three.js 3D Royal Ballroom Background (Walks deeper into the Ballroom as you scroll!) -->
-  <canvas id="webgl-bg-canvas"></canvas>
-
-  <!-- Cursor Candlelight Torch -->
-  <div id="cursor-light"></div>
-
-  <!-- Minimal Floating Audio & Replay Controls (Top-Right Only — No RJB Badge!) -->
-  <div class="floating-top-controls">
-    <button id="replay-envelope-btn" class="royal-icon-pill" title="Replay Envelope Opening">
-      <span>✉️</span> Invitation Envelope
-    </button>
-    <button id="audio-toggle-btn" class="royal-icon-pill" title="Toggle Royal Waltz Music">
-      <span id="audio-icon">🔊</span> <span id="audio-label">Music</span>
-    </button>
+  <!-- Full-Screen 3D WebGL Canvas (100% Integrated 3D World — No Pasted PNG Cards!) -->
+  <div class="canvas-wrapper">
+    <canvas id="webgl-canvas"></canvas>
   </div>
 
-  <!-- =================================================================
-       OPENING GATE: ROYAL VELVET CURTAIN STAGE & EXQUISITE ENVELOPE
-       (Zooms into the opened envelope & parts curtains into the Ballroom!)
-       ================================================================= -->
-  <section id="envelope-gate">
-    <!-- Full-Screen Crimson Velvet & 24k Gold Opera Stage Curtain Backdrop -->
-    <div class="curtain-stage-bg">
-      <img
-        src="./assets/royal_curtain_backdrop.jpg"
-        alt="Royal Crimson Velvet Stage Curtains and Candelabras"
-        fetchpriority="high"
-        width="1920"
-        height="1080"
-        class="curtain-stage-img"
-      />
+  <!-- Velvet & Gold Curtain Teleport Transition Overlay (Portfolio PaperTransition style) -->
+  <div id="curtain-transition" class="curtain-transition" aria-hidden="true">
+    <div class="curtain-wing left"></div>
+    <div class="curtain-wing right"></div>
+    <div class="curtain-crest">⚜ R h i a n   J a d e ⚜</div>
+  </div>
+
+  <!-- Subtle Entrance Hint (Visible only before opening the 3D Envelope) -->
+  <div id="entrance-hud" class="entrance-hud">
+    <p id="entrance-hint" class="entrance-hint">Tap or Click the Gold Rose Wax Seal to Open</p>
+  </div>
+
+  <!-- Portfolio-Inspired Floating Navigation UI (Top-Right Map & Audio Controls, Top-Left Back Button) -->
+  <div id="navigation-ui" class="navigation-ui hidden-until-entered">
+    <!-- Top-Left Back Button (Visible only when inspecting a 3D Portrait Frame) -->
+    <button id="back-to-corridor-btn" class="nav-circle-btn back-btn hidden" aria-label="Return to Ballroom Corridor">
+      <svg viewBox="0 0 24 24" class="nav-svg-icon">
+        <path d="M19 12H5M12 19l-7-7 7-7" />
+      </svg>
+    </button>
+
+    <!-- Top-Right Circular Controls (Ballroom Map & Audio Settings) -->
+    <div class="nav-controls-right">
+      <button id="map-toggle-btn" class="nav-circle-btn" aria-label="Toggle Ballroom Map" aria-expanded="false">
+        <div class="hamburger-lines">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </button>
+
+      <button id="audio-menu-btn" class="nav-circle-btn" aria-label="Audio Settings" aria-expanded="false">
+        <svg viewBox="0 0 24 24" class="nav-svg-icon">
+          <path d="M11 5L6 9H2v6h4l5 4V5z" />
+          <path d="M15 9a5 5 0 0 1 0 6" />
+          <path d="M18 5a9 9 0 0 1 0 14" />
+        </svg>
+      </button>
     </div>
 
-    <!-- Parting Left & Right Velvet Curtain Wings (Swing open during the Zoom-In transition) -->
-    <div class="parting-curtains" aria-hidden="true">
-      <div class="curtain-panel left"></div>
-      <div class="curtain-panel right"></div>
+    <!-- Dropdown Panel: Royal Ballroom Map (Teleport to any Z-Station) -->
+    <div id="ballroom-map-panel" class="hud-dropdown-panel map-panel" role="dialog" aria-label="Ballroom Chapter Map">
+      <div class="panel-header">
+        <h3>ROYAL BALLROOM MAP</h3>
+        <button id="close-map-btn" class="panel-close-btn" aria-label="Close Map">✕</button>
+      </div>
+      <ul class="chapter-map-list">
+        <li>
+          <button class="chapter-jump-btn" data-target-z="13.5">
+            <span class="chapter-num">I</span>
+            <span class="chapter-info">
+              <strong>Rhian Jade Bianzon</strong>
+              <small>Grand Entrance &amp; Oval Mirror</small>
+            </span>
+          </button>
+        </li>
+        <li>
+          <button class="chapter-jump-btn" data-target-z="-10">
+            <span class="chapter-num">II</span>
+            <span class="chapter-info">
+              <strong>January 9, 2027</strong>
+              <small>Live Countdown &amp; Location Sanctuary</small>
+            </span>
+          </button>
+        </li>
+        <li>
+          <button class="chapter-jump-btn" data-target-z="-26">
+            <span class="chapter-num">III</span>
+            <span class="chapter-info">
+              <strong>The Royal Gallery</strong>
+              <small>3D Portrait Alcoves &amp; Pre-Debut Film</small>
+            </span>
+          </button>
+        </li>
+        <li>
+          <button class="chapter-jump-btn" data-target-z="-54">
+            <span class="chapter-num">IV</span>
+            <span class="chapter-info">
+              <strong>18 Roses &amp; 18 Candles</strong>
+              <small>Enchanted Rose Cloche &amp; Unfurling Scrolls</small>
+            </span>
+          </button>
+        </li>
+        <li>
+          <button class="chapter-jump-btn" data-target-z="-80">
+            <span class="chapter-num">V</span>
+            <span class="chapter-info">
+              <strong>18 Treasures &amp; 18 Blue Bills</strong>
+              <small>Royal Parchment Scrolls</small>
+            </span>
+          </button>
+        </li>
+        <li>
+          <button class="chapter-jump-btn" data-target-z="-103">
+            <span class="chapter-num">VI</span>
+            <span class="chapter-info">
+              <strong>Attire &amp; Royal RSVP</strong>
+              <small>Dress Code &amp; Wax Seal Confirmation</small>
+            </span>
+          </button>
+        </li>
+        <li>
+          <button id="replay-envelope-btn" class="chapter-jump-btn">
+            <span class="chapter-num">✉️</span>
+            <span class="chapter-info">
+              <strong>Replay Envelope Opening</strong>
+              <small>Return to the Sealed Invitation</small>
+            </span>
+          </button>
+        </li>
+      </ul>
     </div>
 
-    <!-- Zoom-In Envelope & Pop-Out Baroque Invitation Container -->
-    <div id="envelope-zoom-stage" class="envelope-zoom-stage">
-      <!-- Exquisite Photorealistic Black Velvet & Crimson Satin Envelope with 24k Gold Filigree -->
-      <div id="envelope-closed-wrap" class="envelope-closed-wrap tilt-element">
-        <img
-          src="./assets/royal_envelope_closed.jpg"
-          alt="Royal Black Velvet and Crimson Satin Envelope with Embossed Gold Rose Wax Seal"
-          fetchpriority="high"
-          width="960"
-          height="720"
-          class="envelope-masterpiece-img"
-        />
-        <!-- Interactive Embossed 24k Gold Rose Wax Seal Trigger -->
-        <button id="wax-seal-open-btn" class="wax-seal-trigger" aria-label="Open Royal Invitation">
-          <span class="seal-glow-ring"></span>
-        </button>
+    <!-- Dropdown Panel: Audio Settings -->
+    <div id="audio-settings-panel" class="hud-dropdown-panel audio-panel" role="dialog" aria-label="Audio Settings">
+      <div class="panel-header">
+        <h3>AUDIO AMBIENCE</h3>
+        <button id="close-audio-btn" class="panel-close-btn" aria-label="Close Audio Settings">✕</button>
       </div>
-
-      <!-- Pop-Out Carved 24k Baroque Gold & Parchment Invitation Letter -->
-      <div id="popout-invitation-letter" class="popout-invitation-letter">
-        <img
-          src="./assets/baroque_parchment_card.jpg"
-          alt="Carved 24k Baroque Gold Invitation Letter"
-          fetchpriority="low"
-          width="720"
-          height="960"
-          class="popout-letter-bg"
-        />
-        <div class="popout-letter-content">
-          <div class="letter-crest">⚜ 👑 ⚜</div>
-          <p class="letter-script-intro">You are cordially invited<br/>to the debut celebration of</p>
-          <h1 class="letter-debutante-name">Rhian Jade</h1>
-          <div class="letter-debutante-surname">BIANZON</div>
-          <div class="letter-subtitle">A Decade and Eight</div>
-          <div class="letter-date-banner">
-            <span>SATURDAY</span>
-            <strong>09</strong>
-            <span>JANUARY</span>
-          </div>
-          <div class="letter-year-venue">2027 • FIVE O'CLOCK IN THE EVENING</div>
+      <div class="slider-row">
+        <div class="slider-label-row">
+          <span>Orchestral Waltz</span>
+          <span id="music-vol-val">60%</span>
         </div>
+        <input id="music-vol-slider" type="range" min="0" max="1" step="0.01" value="0.6" class="gold-slider" aria-label="Music Volume" />
       </div>
+      <div class="slider-row">
+        <div class="slider-label-row">
+          <span>Chime &amp; Seal SFX</span>
+          <span id="sfx-vol-val">80%</span>
+        </div>
+        <input id="sfx-vol-slider" type="range" min="0" max="1" step="0.01" value="0.8" class="gold-slider" aria-label="SFX Volume" />
+      </div>
+      <button id="mute-all-btn" class="gold-outline-action">Mute / Unmute All</button>
     </div>
-  </section>
+  </div>
 
-  <!-- =================================================================
-       MAIN BALLROOM EXPERIENCE (Walks Deeper into the 3D Ballroom on Scroll)
-       ================================================================= -->
-  <main id="ballroom-experience">
+  <!-- Bottom Contextual Action & Walk Hint -->
+  <div id="station-context-bar" class="station-context-bar hidden-until-entered">
+    <div id="context-location" class="context-group hidden">
+      <button id="open-map-modal-btn" class="floating-gold-action">
+        <span>📍</span> Venue Directions &amp; QR Code
+      </button>
+    </div>
 
-    <!-- 1. GRAND HERO: RHIAN JADE BIANZON & CARVED BAROQUE OVAL PORTRAIT FRAME -->
-    <section id="hero-section" class="ballroom-section">
-      <div class="hero-title-block pop-on-scroll">
-        <div class="royal-date-kicker">01 . 09 . 2027</div>
-        <h1 class="grand-debutante-title">Rhian Jade</h1>
-        <div class="grand-debutante-surname">B I A N Z O N</div>
-        <p class="grand-tagline">A Decade and Eight</p>
-      </div>
+    <div id="context-rsvp" class="context-group hidden">
+      <button id="open-rsvp-drawer-btn" class="floating-gold-action">
+        <span>♛</span> Inscribe &amp; Wax-Seal Your RSVP
+      </button>
+    </div>
 
-      <!-- Exquisite Carved 24k Baroque Oval Gold Frame with Crimson Curtains, Lanterns & Red Roses (Feathered, No Box!) -->
-      <div
-        class="frameless-oval-masterpiece pop-on-scroll tilt-element"
-        data-modal-title="Rhian Jade Bianzon"
-        data-modal-subtitle="A Decade and Eight • January 9, 2027"
-      >
-        <img
-          src="./assets/baroque_oval_frame.jpg"
-          alt="Ornate 24k Baroque Gold Oval Mirror Frame with Crimson Velvet Curtains and Lanterns"
-          fetchpriority="high"
-          width="800"
-          height="1000"
-          class="feathered-oval-img"
-        />
-        <div class="oval-mirror-interior">
-          <div class="mirror-crown">♛</div>
-          <div class="mirror-monogram">R J B</div>
-          <div class="mirror-date">January 9, 2027</div>
-        </div>
-      </div>
+    <div id="scroll-walk-hint" class="scroll-walk-hint">
+      <span class="mouse-wheel-icon"></span>
+      <span>Scroll or Swipe to Walk Through the Ballroom</span>
+    </div>
+  </div>
 
-      <div class="hero-invitation-verse pop-on-scroll">
-        <p class="verse-script">Join us for an enchanted evening of roses, candlelight, and royal elegance</p>
-        <h2 class="verse-sub">The Eighteenth Birthday Celebration of Rhian Jade Bianzon</h2>
-      </div>
-    </section>
+  <!-- Frameless Royal RSVP Sanctuary Modal -->
+  <dialog id="rsvp-modal" closedby="any" aria-labelledby="rsvp-modal-title" class="integrated-royal-dialog">
+    <div class="frameless-rsvp-sanctuary">
+      <button id="close-rsvp-modal-btn" type="button" class="floating-close-icon" aria-label="Close RSVP">✕</button>
+      <div class="rsvp-ornament-top">⚜ ♛ ⚜</div>
+      <h2 id="rsvp-modal-title" class="rsvp-sanctuary-title">Royal RSVP</h2>
+      <p class="rsvp-sanctuary-subtitle">The Eighteenth Debut of Rhian Jade Bianzon • January 9, 2027</p>
 
-    <!-- 2. LIVE COUNTDOWN TO JANUARY 9, 2027 & BALLROOM SANCTUARY (LOCATION GUIDE) -->
-    <section id="countdown-section" class="ballroom-section">
-      <div class="section-royal-heading pop-on-scroll">
-        <span class="heading-filigree">⚜ ♛ ⚜</span>
-        <h2>The Royal Countdown</h2>
-        <p>Saturday, January 9, 2027 • Five O'Clock in the Evening</p>
-      </div>
-
-      <!-- 4 Carved 24k Baroque Gold Frames for Days, Hours, Minutes, Seconds -->
-      <div class="countdown-frames-row">
-        <div class="carved-rect-unit pop-on-scroll tilt-element">
-          <img src="./assets/baroque_rect_frame.jpg" alt="" loading="lazy" width="420" height="315" class="feathered-rect-img" />
-          <div class="rect-mirror-interior">
-            <span id="cd-days" class="cd-gold-number">00</span>
-            <span class="cd-gold-label">Days</span>
-          </div>
+      <form id="rsvp-production-form" class="rsvp-production-form">
+        <div class="rsvp-input-group">
+          <label for="guest-name-input">Full Name of Honored Guest</label>
+          <input id="guest-name-input" type="text" required placeholder="Enter your full name..." autocomplete="name" />
         </div>
 
-        <div class="carved-rect-unit pop-on-scroll tilt-element">
-          <img src="./assets/baroque_rect_frame.jpg" alt="" loading="lazy" width="420" height="315" class="feathered-rect-img" />
-          <div class="rect-mirror-interior">
-            <span id="cd-hours" class="cd-gold-number">00</span>
-            <span class="cd-gold-label">Hours</span>
-          </div>
+        <div class="rsvp-attendance-toggle">
+          <label class="attendance-choice">
+            <input type="radio" name="attendance" value="Gladly Attending" checked />
+            <span class="choice-pill">✦ Gladly Attending</span>
+          </label>
+          <label class="attendance-choice">
+            <input type="radio" name="attendance" value="Regretfully Declines" />
+            <span class="choice-pill">✧ Regretfully Declines</span>
+          </label>
         </div>
 
-        <div class="carved-rect-unit pop-on-scroll tilt-element">
-          <img src="./assets/baroque_rect_frame.jpg" alt="" loading="lazy" width="420" height="315" class="feathered-rect-img" />
-          <div class="rect-mirror-interior">
-            <span id="cd-mins" class="cd-gold-number">00</span>
-            <span class="cd-gold-label">Minutes</span>
-          </div>
-        </div>
-
-        <div class="carved-rect-unit pop-on-scroll tilt-element">
-          <img src="./assets/baroque_rect_frame.jpg" alt="" loading="lazy" width="420" height="315" class="feathered-rect-img" />
-          <div class="rect-mirror-interior">
-            <span id="cd-secs" class="cd-gold-number">00</span>
-            <span class="cd-gold-label">Seconds</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Integrated Ballroom Location Sanctuary (No Boxed Card Container!) -->
-      <div class="section-royal-heading pop-on-scroll" style="margin-top: 56px;">
-        <span class="heading-filigree">⚜ 📍 ⚜</span>
-        <h2>Location Sanctuary</h2>
-        <p>The Grand Royal Ballroom • Reception Begins at 5:00 PM</p>
-      </div>
-
-      <div class="location-sanctuary-trio">
-        <!-- Left: Carved Baroque Gold Frame with Golden QR Code -->
-        <div class="carved-location-frame pop-on-scroll tilt-element">
-          <img src="./assets/baroque_rect_frame.jpg" alt="Location QR Code Frame" loading="lazy" width="520" height="390" class="feathered-rect-img" />
-          <div class="rect-mirror-interior">
-            <canvas id="inline-qr-canvas" width="120" height="120" class="inline-qr-canvas"></canvas>
-            <span class="mirror-caption">Scan for Directions</span>
-          </div>
-        </div>
-
-        <!-- Center: Floating Golden Typography & Map Trigger -->
-        <div class="location-center-inscription pop-on-scroll">
-          <div class="inscription-kicker">SATURDAY • JANUARY 9, 2027 • 5:00 PM</div>
-          <h3 class="inscription-venue">The Grand Royal Ballroom</h3>
-          <p class="inscription-address">Celebration of Rhian Jade Bianzon's Eighteenth Debut</p>
-          <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" class="royal-gold-cta">
-            📍 Open Venue Map
-          </a>
-        </div>
-
-        <!-- Right: Carved Baroque Gold Frame Showing the Grand Ballroom -->
-        <div class="carved-location-frame pop-on-scroll tilt-element">
-          <img src="./assets/baroque_rect_frame.jpg" alt="Grand Ballroom Venue Frame" loading="lazy" width="520" height="390" class="feathered-rect-img" />
-          <div class="rect-mirror-interior venue-preview-interior">
-            <img src="./assets/royal_ballroom_bg.jpg" alt="The Grand Royal Ballroom" loading="lazy" width="320" height="180" class="venue-inner-thumb" />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. THE ROYAL PORTRAIT & PRE-DEBUT FILM GALLERY (Feathered Carved Frames) -->
-    <section id="gallery-section" class="ballroom-section">
-      <div class="section-royal-heading pop-on-scroll">
-        <span class="heading-filigree">⚜ ♛ ⚜</span>
-        <h2>Royal Portrait Gallery</h2>
-        <p>Moments Leading to Rhian Jade's Eighteenth Year</p>
-      </div>
-
-      <div class="royal-gallery-constellation">
-        <!-- Left Wing Portraits -->
-        <div class="gallery-wing">
-          <div
-            class="carved-gallery-frame frame-aspect-4-3 pop-on-scroll tilt-element"
-            data-modal-title="Royal Portrait I"
-            data-modal-subtitle="Rhian Jade Bianzon • Pre-Debut Collection"
-          >
-            <img src="./assets/baroque_rect_frame.jpg" alt="Baroque Gold Frame I" loading="lazy" width="600" height="450" class="feathered-rect-img" />
-            <div class="rect-mirror-interior">
-              <span class="mirror-monogram-sm">I</span>
-              <span class="mirror-caption">Royal Scarlet Portrait</span>
-            </div>
-          </div>
-
-          <div
-            class="carved-gallery-frame frame-aspect-16-10 pop-on-scroll tilt-element"
-            data-modal-title="Royal Portrait III"
-            data-modal-subtitle="Rhian Jade Bianzon • Pre-Debut Collection"
-          >
-            <img src="./assets/baroque_rect_frame.jpg" alt="Baroque Gold Frame III" loading="lazy" width="600" height="450" class="feathered-rect-img" />
-            <div class="rect-mirror-interior">
-              <span class="mirror-monogram-sm">III</span>
-              <span class="mirror-caption">Midnight Velvet Series</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Center Grand Oval Portrait -->
-        <div class="gallery-center-column">
-          <div
-            class="carved-gallery-frame frame-aspect-oval pop-on-scroll tilt-element"
-            data-modal-title="Centerpiece Portrait"
-            data-modal-subtitle="Rhian Jade Bianzon • A Decade and Eight"
-          >
-            <img src="./assets/baroque_oval_frame.jpg" alt="Centerpiece Baroque Oval Frame" loading="lazy" width="640" height="800" class="feathered-oval-img" />
-            <div class="oval-mirror-interior">
-              <div class="mirror-crown">♛</div>
-              <div class="mirror-monogram">Rhian Jade</div>
-              <div class="mirror-date">XVIII</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Wing Portraits -->
-        <div class="gallery-wing">
-          <div
-            class="carved-gallery-frame frame-aspect-16-10 pop-on-scroll tilt-element"
-            data-modal-title="Royal Portrait II"
-            data-modal-subtitle="Rhian Jade Bianzon • Pre-Debut Collection"
-          >
-            <img src="./assets/baroque_rect_frame.jpg" alt="Baroque Gold Frame II" loading="lazy" width="600" height="450" class="feathered-rect-img" />
-            <div class="rect-mirror-interior">
-              <span class="mirror-monogram-sm">II</span>
-              <span class="mirror-caption">24k Gold Couture</span>
-            </div>
-          </div>
-
-          <div
-            class="carved-gallery-frame frame-aspect-4-3 pop-on-scroll tilt-element"
-            data-modal-title="Royal Portrait IV"
-            data-modal-subtitle="Rhian Jade Bianzon • Pre-Debut Collection"
-          >
-            <img src="./assets/baroque_rect_frame.jpg" alt="Baroque Gold Frame IV" loading="lazy" width="600" height="450" class="feathered-rect-img" />
-            <div class="rect-mirror-interior">
-              <span class="mirror-monogram-sm">IV</span>
-              <span class="mirror-caption">Candlelight Elegance</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Wide Horizontal Carved Baroque Cinema Frame for Pre-Debut Film -->
-      <div
-        class="carved-cinema-masterpiece pop-on-scroll tilt-element"
-        data-modal-title="Pre-Debut Film"
-        data-modal-subtitle="Rhian Jade Bianzon • Save the Date Teaser (January 9, 2027)"
-      >
-        <img src="./assets/baroque_rect_frame.jpg" alt="Baroque Gold Cinema Frame" loading="lazy" width="960" height="540" class="feathered-rect-img" />
-        <div class="rect-mirror-interior cinema-interior">
-          <div class="cinema-play-emblem">▶</div>
-          <div class="mirror-monogram" style="font-size: 1.35rem;">Rhian Jade — Pre-Debut Film</div>
-          <div class="cinema-timeline">
-            <span>00:00</span>
-            <div class="timeline-bar"><div class="timeline-fill"></div></div>
-            <span>03:18</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================
-         4. THE EIGHTEENTH PROGRAM: ENCHANTED ROSE CLOCHE + SEPARATE
-            POP-ON-SCROLL PARCHMENT PLAQUES (NO CLICKING REQUIRED!)
-         ================================================================= -->
-    <section id="program-section" class="ballroom-section">
-      <div class="section-royal-heading pop-on-scroll">
-        <span class="heading-filigree">⚜ 🌹 ⚜</span>
-        <h2>The Eighteenth Program</h2>
-        <p>Honoring the Eighteen Special People in Rhian Jade's Life</p>
-      </div>
-
-      <!-- Enchanted Crimson & Gold Rose Cloche Masterpiece with Live 3D Embers -->
-      <div class="cloche-sanctuary-showcase pop-on-scroll tilt-element">
-        <img
-          src="./assets/enchanted_rose_cloche.jpg"
-          alt="Enchanted Crimson and Gold Rose in Crystal Bell Jar with Lit Candelabras"
-          loading="lazy"
-          width="1280"
-          height="720"
-          class="feathered-cloche-img"
-        />
-        <canvas id="cloche-sparks-canvas" class="cloche-sparks-canvas"></canvas>
-      </div>
-
-      <!-- SEPARATE POP-ON-SCROLL 18S PLAQUES (Each one pops into view as you scroll down!) -->
-      <div class="program-scroll-stream">
-
-        <!-- 18 ROSES (Pops in on Scroll) -->
-        <article class="single-18-stage pop-on-scroll">
-          <div class="stage-number-crest">✦ I • EIGHTEEN ROSES ✦</div>
-          <div class="carved-parchment-plaque tilt-element">
-            <img src="./assets/baroque_parchment_card.jpg" alt="18 Roses Baroque Gold Parchment Plaque" loading="lazy" width="760" height="1010" class="feathered-parchment-img" />
-            <div class="parchment-inner-area">
-              <div class="parchment-crest">⚜ 🌹 ⚜</div>
-              <h3 class="parchment-heading">18 Roses</h3>
-              <p class="parchment-sub">The Gentlemen of the Royal Waltz</p>
-              <ol id="list-18-roses" class="parchment-18-grid"></ol>
-            </div>
-          </div>
-        </article>
-
-        <!-- 18 CANDLES (Pops in on Scroll) -->
-        <article class="single-18-stage pop-on-scroll">
-          <div class="stage-number-crest">✦ II • EIGHTEEN CANDLES ✦</div>
-          <div class="carved-parchment-plaque tilt-element">
-            <img src="./assets/baroque_parchment_card.jpg" alt="18 Candles Baroque Gold Parchment Plaque" loading="lazy" width="760" height="1010" class="feathered-parchment-img" />
-            <div class="parchment-inner-area">
-              <div class="parchment-crest">⚜ 🕯️ ⚜</div>
-              <h3 class="parchment-heading">18 Candles</h3>
-              <p class="parchment-sub">The Ladies Lighting the Path with Wishes</p>
-              <ol id="list-18-candles" class="parchment-18-grid"></ol>
-            </div>
-          </div>
-        </article>
-
-        <!-- 18 TREASURES (Pops in on Scroll) -->
-        <article class="single-18-stage pop-on-scroll">
-          <div class="stage-number-crest">✦ III • EIGHTEEN TREASURES ✦</div>
-          <div class="carved-parchment-plaque tilt-element">
-            <img src="./assets/baroque_parchment_card.jpg" alt="18 Treasures Baroque Gold Parchment Plaque" loading="lazy" width="760" height="1010" class="feathered-parchment-img" />
-            <div class="parchment-inner-area">
-              <div class="parchment-crest">⚜ 👑 ⚜</div>
-              <h3 class="parchment-heading">18 Treasures</h3>
-              <p class="parchment-sub">Keepsakes &amp; Tokens of Wisdom</p>
-              <ol id="list-18-treasures" class="parchment-18-grid"></ol>
-            </div>
-          </div>
-        </article>
-
-        <!-- 18 BLUE BILLS (Pops in on Scroll) -->
-        <article class="single-18-stage pop-on-scroll">
-          <div class="stage-number-crest">✦ IV • EIGHTEEN BLUE BILLS ✦</div>
-          <div class="carved-parchment-plaque tilt-element">
-            <img src="./assets/baroque_parchment_card.jpg" alt="18 Blue Bills Baroque Gold Parchment Plaque" loading="lazy" width="760" height="1010" class="feathered-parchment-img" />
-            <div class="parchment-inner-area">
-              <div class="parchment-crest">⚜ ✧ ⚜</div>
-              <h3 class="parchment-heading">18 Blue Bills</h3>
-              <p class="parchment-sub">Blessings of Prosperity &amp; Grace</p>
-              <ol id="list-18-bills" class="parchment-18-grid"></ol>
-            </div>
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- =================================================================
-         5. ATTIRE & GIFT GUIDE (3D PBR ORBS) + ROYAL WAX-STAMP RSVP FINALE
-         ================================================================= -->
-    <section id="rsvp-section" class="ballroom-section">
-      <div class="section-royal-heading pop-on-scroll">
-        <span class="heading-filigree">⚜ ♛ ⚜</span>
-        <h2>Attire &amp; Gift Guide</h2>
-        <p>Formal Evening Attire • Royal Crimson, 24k Gold &amp; Obsidian Black</p>
-      </div>
-
-      <!-- Real-Time Three.js 3D PBR Material Swatch Orbs -->
-      <div class="orbs-sanctuary-wrap pop-on-scroll">
-        <canvas id="orbs-canvas"></canvas>
-        <div class="orbs-caption-row">
-          <div>
-            <h4>ROYAL CRIMSON</h4>
-            <p>Satin &amp; Silk Evening Gown / Suit</p>
-          </div>
-          <div>
-            <h4>24K BRUSHED GOLD</h4>
-            <p>Metallic Accents &amp; Details</p>
-          </div>
-          <div>
-            <h4>OBSIDIAN BLACK</h4>
-            <p>Formal Velvet &amp; Black Tie</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Carved 24k Baroque Gold & Parchment Royal RSVP Finale -->
-      <div class="section-royal-heading pop-on-scroll" style="margin-top: 40px;">
-        <span class="heading-filigree">⚜ ✉️ ⚜</span>
-        <h2>Royal RSVP</h2>
-        <p>Kindly Confirm Your Attendance on or Before December 20, 2026</p>
-      </div>
-
-      <div class="carved-parchment-plaque rsvp-plaque pop-on-scroll">
-        <img src="./assets/baroque_parchment_card.jpg" alt="Royal RSVP Baroque Gold Parchment" loading="lazy" width="760" height="1010" class="feathered-parchment-img" />
-        <form id="rsvp-parchment-form" class="parchment-inner-area rsvp-inner-form">
-          <div class="parchment-crest">⚜ 👑 ⚜</div>
-          <h3 class="parchment-heading">Royal RSVP</h3>
-          <p class="parchment-sub">Rhian Jade Bianzon • January 9, 2027</p>
-
-          <div class="parchment-field">
-            <label for="rsvp-name">HONORED GUEST NAME</label>
-            <input id="rsvp-name" type="text" required placeholder="Enter your full name..." />
-          </div>
-
-          <div class="parchment-radio-row">
-            <label>
-              <input type="radio" name="rsvp-attend" value="attending" checked />
-              <span>Gladly Attending</span>
-            </label>
-            <label>
-              <input type="radio" name="rsvp-attend" value="declining" />
-              <span>Regretfully Declines</span>
-            </label>
-          </div>
-
-          <div class="parchment-field">
-            <label for="rsvp-seats">RESERVED SEATS</label>
-            <select id="rsvp-seats">
+        <div class="rsvp-two-col">
+          <div class="rsvp-input-group">
+            <label for="guest-seats-select">Number of Guests</label>
+            <select id="guest-seats-select">
               <option value="1">1 Reserved Seat</option>
               <option value="2">2 Reserved Seats</option>
               <option value="3">3 Reserved Seats</option>
               <option value="4">4 Reserved Seats</option>
             </select>
           </div>
-
-          <div class="parchment-field">
-            <label for="rsvp-wish">BIRTHDAY WISH FOR RHIAN JADE</label>
-            <input id="rsvp-wish" type="text" placeholder="Write a personal wish or blessing..." />
+          <div class="rsvp-input-group">
+            <label for="guest-contact-input">Email or Contact Number</label>
+            <input id="guest-contact-input" type="text" placeholder="For confirmation..." />
           </div>
+        </div>
 
-          <!-- Interactive 3D Brass Handle & Molten Crimson-Gold Wax Seal -->
-          <div id="wax-stamp-zone" class="wax-stamp-zone">
-            <div class="brass-stamp-handle">⚜</div>
-            <button id="stamp-rsvp-btn" type="submit" class="molten-wax-btn">
-              STAMP &amp; SEAL<br/>YOUR RSVP
-            </button>
-          </div>
-        </form>
+        <div class="rsvp-input-group">
+          <label for="guest-wish-input">Birthday Wish for Rhian Jade</label>
+          <textarea id="guest-wish-input" rows="2" placeholder="Write a personal message or blessing for Rhian Jade..."></textarea>
+        </div>
+
+        <div id="wax-stamp-interactive" class="wax-stamp-interactive">
+          <div class="brass-engraved-handle">⚜</div>
+          <button id="seal-rsvp-submit-btn" type="submit" class="molten-crimson-seal">
+            <span id="seal-btn-text">STAMP &amp; SEAL<br/>YOUR RSVP</span>
+          </button>
+        </div>
+        <p id="rsvp-confirmation-msg" class="rsvp-confirmation-msg hidden">
+          ♛ Your RSVP has been sealed in gold for Rhian Jade Bianzon's Debut on January 9, 2027.
+        </p>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Frameless Venue Directions & QR Modal -->
+  <dialog id="venue-modal" closedby="any" aria-labelledby="venue-modal-title" class="integrated-royal-dialog">
+    <div class="frameless-rsvp-sanctuary">
+      <button id="close-venue-modal-btn" type="button" class="floating-close-icon" aria-label="Close Directions">✕</button>
+      <div class="rsvp-ornament-top">⚜ 📍 ⚜</div>
+      <h2 id="venue-modal-title" class="rsvp-sanctuary-title">The Grand Ballroom</h2>
+      <p class="rsvp-sanctuary-subtitle">Saturday, January 9, 2027 • Doors Open at 5:00 PM</p>
+
+      <div class="venue-modal-body">
+        <canvas id="qr-canvas" width="180" height="180" class="gold-qr-canvas"></canvas>
+        <div class="venue-modal-details">
+          <h3>Celebration of Rhian Jade Bianzon</h3>
+          <p>Formal Evening Attire • Royal Crimson, 24k Gold &amp; Obsidian Black</p>
+          <p style="margin-top: 10px; opacity: 0.85;">Scan the golden QR emblem or open Google Maps below for direct navigation to the reception ballroom.</p>
+          <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" class="floating-gold-action" style="margin-top: 18px; display: inline-flex; text-decoration: none;">
+            Open in Google Maps ↗
+          </a>
+        </div>
       </div>
-    </section>
-
-  </main>
-
-  <!-- Native HTML <dialog closedby="any"> Modal for Frame Inspection -->
-  <dialog id="frame-lightbox" closedby="any" aria-labelledby="lightbox-title" class="frame-lightbox-dialog">
-    <form method="dialog" class="lightbox-sanctuary">
-      <div class="parchment-crest" style="color: #d4af37; margin-bottom: 8px;">⚜ ♛ ⚜</div>
-      <h3 id="lightbox-title">Rhian Jade Bianzon</h3>
-      <p id="lightbox-desc">A Decade and Eight • Saturday, January 9, 2027</p>
-      <button type="submit" class="royal-gold-cta" style="margin-top: 16px;">Close</button>
-    </form>
+    </div>
   </dialog>
 
   <script type="module" src="./main.js"></script>
