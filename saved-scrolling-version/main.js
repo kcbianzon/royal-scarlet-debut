@@ -165,37 +165,6 @@ const obsidianPBR = new THREE.MeshStandardMaterial({
   roughness: 0.3
 });
 
-// Create repeating 3D Ballroom Arch Portals with open center (using Ballroom texture on outer wings)
-function createBallroomPortalMaterial() {
-  return new THREE.ShaderMaterial({
-    uniforms: {
-      uMap: { value: ballroomTex }
-    },
-    transparent: true,
-    depthWrite: false,
-    vertexShader: `
-      varying vec2 vUv;
-      void main() {
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
-    fragmentShader: `
-      uniform sampler2D uMap;
-      varying vec2 vUv;
-      void main() {
-        vec4 tex = texture2D(uMap, vUv);
-        // Cut out an arched portal opening in the center so the camera walks right through it!
-        vec2 c = (vUv - vec2(0.5, 0.42)) * vec2(1.45, 1.25);
-        float hole = smoothstep(0.38, 0.68, length(c));
-        float outerFade = 1.0 - smoothstep(0.82, 1.0, max(abs(vUv.x - 0.5) * 2.0, abs(vUv.y - 0.5) * 2.0));
-        gl_FragColor = vec4(tex.rgb * 0.72, hole * outerFade * 0.85);
-      }
-    `
-  });
-}
-
-const portalMat = createBallroomPortalMaterial();
 const chandelierHalos = [];
 
 for (let i = 0; i < 7; i++) {
@@ -203,25 +172,9 @@ for (let i = 0; i < 7; i++) {
   const portalGroup = new THREE.Group();
   portalGroup.position.set(0, 0.2, zPos);
 
-  // Textured Ballroom Wing Portal
-  const wingPlane = new THREE.Mesh(new THREE.PlaneGeometry(24, 13.5), portalMat);
-  portalGroup.add(wingPlane);
-
-  // 3D Golden Baroque Archway Ring
-  const archRing = new THREE.Mesh(new THREE.TorusGeometry(5.2, 0.045, 16, 80), goldPBR);
-  archRing.position.z = 0.08;
-  portalGroup.add(archRing);
-
-  // Left & Right 3D Obsidian & Gold Columns
-  [-5.1, 5.1].forEach((xCol) => {
-    const col = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.22, 9, 16), obsidianPBR);
-    col.position.set(xCol, 0, 0.12);
-    portalGroup.add(col);
-  });
-
-  // Glowing Chandelier Light Cluster at the top of each bay
+  // Glowing Chandelier Light Cluster at the top of each bay (No duplicated castle texture planes!)
   const chandelierOrb = new THREE.Mesh(
-    new THREE.SphereGeometry(0.16, 12, 12),
+    new THREE.SphereGeometry(0.14, 12, 12),
     new THREE.MeshBasicMaterial({ color: 0xffe8a3 })
   );
   chandelierOrb.position.set(0, 3.6, 0.2);
