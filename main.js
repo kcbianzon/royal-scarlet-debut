@@ -214,34 +214,114 @@ function fitBallroomPlaneToViewport() {
   ballroomVistaPlane.scale.set(w / 36, h / 20.25, 1);
 }
 
-const dustCount = 240;
+const dustCount = 55;
 const dustGeo = new THREE.BufferGeometry();
 const dustPositions = new Float32Array(dustCount * 3);
 const dustSpeeds = new Float32Array(dustCount);
 
 for (let i = 0; i < dustCount; i++) {
-  dustPositions[i * 3] = (Math.random() - 0.5) * 22;
+  dustPositions[i * 3] = (Math.random() - 0.5) * 20;
   dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 14;
-  dustPositions[i * 3 + 2] = 6 - Math.random() * 9;
-  dustSpeeds[i] = 0.0045 + Math.random() * 0.009;
+  dustPositions[i * 3 + 2] = 5 - Math.random() * 9;
+  dustSpeeds[i] = 0.002 + Math.random() * 0.0045;
 }
 dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPositions, 3));
 
 const dustMat = new THREE.PointsMaterial({
   map: goldGlowTex,
-  size: 0.2,
+  size: 0.11,
   transparent: true,
-  opacity: 0.72,
+  opacity: 0.36,
   depthWrite: false,
   blending: THREE.AdditiveBlending
 });
 bgScene.add(new THREE.Points(dustGeo, dustMat));
 
+// Gently Falling Crimson Velvet Rose Petals in the Ballroom Atmosphere
+function createRosePetalTexture() {
+  const c = document.createElement('canvas');
+  c.width = 128;
+  c.height = 128;
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, 128, 128);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(64, 114);
+  ctx.bezierCurveTo(22, 96, 10, 44, 38, 18);
+  ctx.bezierCurveTo(50, 7, 60, 16, 64, 24);
+  ctx.bezierCurveTo(68, 16, 78, 7, 90, 18);
+  ctx.bezierCurveTo(118, 44, 106, 96, 64, 114);
+  ctx.closePath();
+
+  const grad = ctx.createRadialGradient(54, 42, 6, 64, 68, 64);
+  grad.addColorStop(0, '#c81432');
+  grad.addColorStop(0.5, '#8e031b');
+  grad.addColorStop(1, '#42000a');
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  ctx.strokeStyle = 'rgba(255, 185, 195, 0.16)';
+  ctx.lineWidth = 1.4;
+  ctx.stroke();
+  ctx.restore();
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+const petalTex = createRosePetalTexture();
+const basePetalGeo = new THREE.PlaneGeometry(0.42, 0.48, 4, 4);
+const pPos = basePetalGeo.attributes.position;
+for (let i = 0; i < pPos.count; i++) {
+  const px = pPos.getX(i);
+  const py = pPos.getY(i);
+  pPos.setZ(i, Math.sin(px * 4.2) * 0.055 + (py * py) * 0.18);
+}
+basePetalGeo.computeVertexNormals();
+
+const petalPalette = [0xb3122d, 0x8d061c, 0xc71a38, 0x6f0214];
+const petalItems = [];
+const petalCount = 46;
+
+for (let i = 0; i < petalCount; i++) {
+  const mat = new THREE.MeshBasicMaterial({
+    map: petalTex,
+    color: petalPalette[i % petalPalette.length],
+    transparent: true,
+    opacity: 0.78 + Math.random() * 0.18,
+    side: THREE.DoubleSide,
+    depthWrite: false
+  });
+  const mesh = new THREE.Mesh(basePetalGeo, mat);
+  const s = 0.65 + Math.random() * 0.7;
+  mesh.scale.set(s, s, s);
+  mesh.position.set(
+    (Math.random() - 0.5) * 20,
+    (Math.random() - 0.5) * 16,
+    1.2 + Math.random() * 4.8
+  );
+  mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+  bgScene.add(mesh);
+
+  petalItems.push({
+    mesh,
+    fallSpeed: 0.012 + Math.random() * 0.015,
+    swayAmp: 0.008 + Math.random() * 0.012,
+    swayFreq: 0.6 + Math.random() * 0.9,
+    phase: Math.random() * Math.PI * 2,
+    rotSpeedX: (Math.random() - 0.5) * 0.018,
+    rotSpeedY: (Math.random() - 0.5) * 0.022,
+    rotSpeedZ: (Math.random() - 0.5) * 0.015
+  });
+}
+
 function triggerGoldBurst() {
   gsap.fromTo(
     dustMat,
-    { size: 0.4, opacity: 1.0 },
-    { size: 0.2, opacity: 0.72, duration: 1.4, ease: 'power2.out' }
+    { size: 0.24, opacity: 0.72 },
+    { size: 0.11, opacity: 0.36, duration: 1.4, ease: 'power2.out' }
   );
 }
 
@@ -306,12 +386,16 @@ orbsRenderer.toneMappingExposure = 1.45;
 
 function resizeOrbsScene() {
   if (!orbsCanvas || !orbsCanvas.parentElement) return;
-  const rect = orbsCanvas.parentElement.getBoundingClientRect();
-  const w = Math.max(260, rect.width - 24);
-  const h = Math.min(210, Math.max(140, window.innerHeight * 0.24));
-  orbsRenderer.setSize(w, h);
+  const w = Math.max(260, orbsCanvas.parentElement.clientWidth - 4);
+  const h = orbsCanvas.clientHeight || (window.innerWidth <= 600 ? 138 : Math.min(210, Math.max(145, Math.round(window.innerHeight * 0.24))));
   orbsRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  orbsCamera.aspect = w / h;
+  orbsRenderer.setSize(w, h, false);
+  orbsCamera.aspect = w / Math.max(1, h);
+
+  // Ensure all 3 orbs + gold halo rings (-3.75 .. +3.75 world X) fit comfortably inside mobile & desktop aspect ratios
+  const minHalfWorldW = 4.05;
+  const vHalfTan = Math.tan(THREE.MathUtils.degToRad(orbsCamera.fov * 0.5));
+  orbsCamera.position.z = Math.max(6.2, minHalfWorldW / (Math.max(0.5, orbsCamera.aspect) * vHalfTan));
   orbsCamera.updateProjectionMatrix();
 }
 
@@ -334,39 +418,40 @@ const goldPBR = new THREE.MeshStandardMaterial({
   roughness: 0.2
 });
 
-const sphereGeo = new THREE.SphereGeometry(1.02, 48, 48);
+const sphereGeo = new THREE.SphereGeometry(0.98, 48, 48);
 
-const crimsonOrb = new THREE.Mesh(
+const blackOrb = new THREE.Mesh(
   sphereGeo,
   new THREE.MeshPhysicalMaterial({
-    color: 0x9b001a,
-    roughness: 0.22,
-    metalness: 0.18,
+    color: 0x0b0a0e,
+    roughness: 0.42,
+    metalness: 0.22,
     clearcoat: 0.65,
-    clearcoatRoughness: 0.2
+    clearcoatRoughness: 0.22
   })
 );
-crimsonOrb.position.x = -2.75;
-orbsScene.add(crimsonOrb);
+blackOrb.position.x = -2.5;
+orbsScene.add(blackOrb);
 
 const goldOrb = new THREE.Mesh(sphereGeo, goldPBR);
 goldOrb.position.x = 0;
 orbsScene.add(goldOrb);
 
-const blackOrb = new THREE.Mesh(
+const whiteOrb = new THREE.Mesh(
   sphereGeo,
   new THREE.MeshPhysicalMaterial({
-    color: 0x090305,
-    roughness: 0.68,
-    metalness: 0.15,
-    clearcoat: 0.35
+    color: 0xf7f2e8,
+    roughness: 0.24,
+    metalness: 0.08,
+    clearcoat: 0.85,
+    clearcoatRoughness: 0.14
   })
 );
-blackOrb.position.x = 2.75;
-orbsScene.add(blackOrb);
+whiteOrb.position.x = 2.5;
+orbsScene.add(whiteOrb);
 
-[crimsonOrb, goldOrb, blackOrb].forEach((orb) => {
-  const halo = new THREE.Mesh(new THREE.TorusGeometry(1.22, 0.025, 16, 64), goldPBR);
+[blackOrb, goldOrb, whiteOrb].forEach((orb) => {
+  const halo = new THREE.Mesh(new THREE.TorusGeometry(1.18, 0.025, 16, 64), goldPBR);
   halo.rotation.x = Math.PI / 3;
   orb.add(halo);
 });
@@ -584,16 +669,24 @@ mapToggleBtn.addEventListener('click', () => {
   const isOpen = mapPanel.classList.toggle('open');
   audioPanel.classList.remove('open');
   mapToggleBtn.setAttribute('aria-expanded', String(isOpen));
+  audioMenuBtn.setAttribute('aria-expanded', 'false');
 });
 
 audioMenuBtn.addEventListener('click', () => {
   const isOpen = audioPanel.classList.toggle('open');
   mapPanel.classList.remove('open');
   audioMenuBtn.setAttribute('aria-expanded', String(isOpen));
+  mapToggleBtn.setAttribute('aria-expanded', 'false');
 });
 
-document.getElementById('close-map-btn').addEventListener('click', () => mapPanel.classList.remove('open'));
-document.getElementById('close-audio-btn').addEventListener('click', () => audioPanel.classList.remove('open'));
+document.getElementById('close-map-btn').addEventListener('click', () => {
+  mapPanel.classList.remove('open');
+  mapToggleBtn.setAttribute('aria-expanded', 'false');
+});
+document.getElementById('close-audio-btn').addEventListener('click', () => {
+  audioPanel.classList.remove('open');
+  audioMenuBtn.setAttribute('aria-expanded', 'false');
+});
 
 const curtainEl = document.getElementById('curtain-transition');
 const leftWing = curtainEl.querySelector('.curtain-wing.left');
@@ -602,6 +695,7 @@ const curtainCrest = curtainEl.querySelector('.curtain-crest');
 
 function teleportToStation(stationIdx) {
   mapPanel.classList.remove('open');
+  mapToggleBtn.setAttribute('aria-expanded', 'false');
   const destZ = THREE.MathUtils.clamp(stationIdx * STATION_STEP_Z, 0, MAX_CORRIDOR_Z);
 
   curtainEl.style.display = 'block';
@@ -835,7 +929,7 @@ function animate() {
     el.classList.toggle('station-active', absDelta < 0.36);
   });
 
-  // 3D Gold Dust
+  // 3D Subtle Gold Dust & Falling Crimson Rose Petals
   const dAttr = dustGeo.attributes.position;
   for (let i = 0; i < dustCount; i++) {
     let y = dAttr.getY(i) + dustSpeeds[i];
@@ -843,6 +937,20 @@ function animate() {
     dAttr.setY(i, y);
   }
   dAttr.needsUpdate = true;
+
+  for (let i = 0; i < petalItems.length; i++) {
+    const p = petalItems[i];
+    p.mesh.position.y -= p.fallSpeed;
+    p.mesh.position.x += Math.sin(elapsed * p.swayFreq + p.phase) * p.swayAmp;
+    p.mesh.rotation.x += p.rotSpeedX;
+    p.mesh.rotation.y += p.rotSpeedY;
+    p.mesh.rotation.z += p.rotSpeedZ;
+    if (p.mesh.position.y < -8) {
+      p.mesh.position.y = 8;
+      p.mesh.position.x = (Math.random() - 0.5) * 20;
+    }
+  }
+
   bgRenderer.render(bgScene, bgCamera);
 
   // Station 5: Cloche Sparks
@@ -857,14 +965,14 @@ function animate() {
     clocheRenderer.render(clocheScene, clocheCam);
   }
 
-  // Station 10: 3D PBR Swatch Orbs
+  // Station 10: 3D PBR Swatch Orbs (Obsidian Black, 24k Gold & Ivory White)
   if (Math.abs(currentZ - 10 * STATION_STEP_Z) < 1100) {
-    crimsonOrb.rotation.y = elapsed * 0.55;
-    crimsonOrb.rotation.x = Math.sin(elapsed * 0.7) * 0.2;
+    blackOrb.rotation.y = elapsed * 0.55;
+    blackOrb.rotation.x = Math.sin(elapsed * 0.7) * 0.2;
     goldOrb.rotation.y = -elapsed * 0.65;
     goldOrb.rotation.x = Math.cos(elapsed * 0.7) * 0.2;
-    blackOrb.rotation.y = elapsed * 0.5;
-    blackOrb.rotation.x = Math.sin(elapsed * 0.5) * 0.2;
+    whiteOrb.rotation.y = elapsed * 0.5;
+    whiteOrb.rotation.x = Math.sin(elapsed * 0.5) * 0.2;
     orbsRenderer.render(orbsScene, orbsCamera);
   }
 }

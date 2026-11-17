@@ -728,7 +728,19 @@
     object-fit: cover;
     object-position: center 14%;
     display: block;
-    filter: sepia(0.08) contrast(1.06) saturate(1.12) brightness(0.9);
+    filter: brightness(1.08) contrast(1.03) saturate(1.08);
+  }
+
+  .portrait-photo-graded.pos-seated {
+    object-position: center 12%;
+  }
+
+  .portrait-photo-graded.pos-cameo {
+    object-position: center 18%;
+  }
+
+  .portrait-photo-graded.pos-shoulder {
+    object-position: center 16%;
   }
 
   .inspectable-frame {
@@ -819,11 +831,13 @@
     font-family: var(--font-script);
     font-weight: 400;
     font-size: clamp(4rem, 2.2rem + 7.2vw, 8.2rem);
-    line-height: 1.05;
+    line-height: 1.24;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 0.28em;
+    gap: 0.24em;
+    overflow: visible;
+    padding-inline: 18px;
     filter: drop-shadow(0 12px 34px rgba(0, 0, 0, 0.98));
   }
 
@@ -832,7 +846,8 @@
     background: linear-gradient(180deg, #fffbe8 0%, #f5df96 48%, #c59527 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    padding-inline: 0.06em;
+    padding: 0.16em 0.34em;
+    margin: -0.16em -0.26em;
     will-change: transform, opacity;
   }
 
@@ -886,17 +901,17 @@
      ========================================================= */
   .frameless-oval-masterpiece {
     position: relative;
-    width: min(460px, 82dvw, 56dvh);
-    aspect-ratio: 4 / 5;
+    width: min(440px, 82dvw, 56dvh);
+    aspect-ratio: 896 / 1200;
   }
 
   .oval-portrait-window {
     position: absolute;
     z-index: 1;
-    left: 29%;
-    right: 29%;
-    top: 26.5%;
-    bottom: 27%;
+    left: 21.5%;
+    right: 21.5%;
+    top: 25%;
+    bottom: 16.5%;
     border-radius: 50%;
     overflow: hidden;
   }
@@ -906,15 +921,14 @@
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background: radial-gradient(ellipse at center, transparent 48%, rgba(28, 3, 8, 0.52) 84%, rgba(8, 1, 3, 0.92) 100%);
-    box-shadow: inset 0 0 26px rgba(0, 0, 0, 0.85);
+    box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.36);
     pointer-events: none;
   }
 
   .oval-name-caption {
     position: absolute;
-    inset-inline: 28%;
-    bottom: 30%;
+    inset-inline: 24%;
+    bottom: 20%;
     z-index: 4;
     text-align: center;
     pointer-events: none;
@@ -922,9 +936,11 @@
 
   .oval-name-caption span {
     font-family: var(--font-script);
-    font-size: clamp(1.3rem, 1rem + 1.2vw, 1.85rem);
+    font-size: clamp(1.25rem, 0.95rem + 1.1vw, 1.8rem);
     color: var(--gold-light);
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.98), 0 0 18px rgba(0, 0, 0, 0.95);
+    background: radial-gradient(ellipse at center, rgba(10, 2, 4, 0.65) 0%, transparent 78%);
+    padding: 4px 16px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.98), 0 0 16px rgba(0, 0, 0, 0.95);
   }
 
   /* =========================================================
@@ -962,10 +978,10 @@
   .rect-photo-window {
     position: absolute;
     z-index: 1;
-    left: 20.5%;
-    right: 20.5%;
-    top: 25%;
-    bottom: 25.5%;
+    left: 20.4%;
+    right: 19.8%;
+    top: 25.4%;
+    bottom: 25.6%;
     overflow: hidden;
   }
 
@@ -973,7 +989,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at center, transparent 45%, rgba(16, 2, 5, 0.65) 100%);
+    box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.28);
     pointer-events: none;
   }
 
@@ -1109,69 +1125,70 @@
   }
 
   /* =========================================================
-     STATION 4: ROYAL PORTRAIT GALLERY & CINEMA
+     STATION 4: ROYAL PORTRAIT GALLERY (4 Distinct Bespoke Frames)
      ========================================================= */
-  .royal-gallery-constellation {
+  .royal-gallery-salon {
     display: grid;
-    grid-template-columns: 1fr 1.35fr 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(4, minmax(180px, 240px));
+    gap: clamp(12px, 1.8vw, 24px);
     width: 100%;
-    align-items: center;
-    perspective: 1100px;
-  }
-
-  .gallery-wing {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .gallery-wing.left-wing { transform: rotateY(12deg); }
-  .gallery-wing.right-wing { transform: rotateY(-12deg); }
-
-  .carved-gallery-frame {
-    position: relative;
-    aspect-ratio: 4 / 3;
-  }
-
-  .carved-cinema-masterpiece {
-    position: relative;
-    aspect-ratio: 4 / 3;
-    width: 100%;
-  }
-
-  .cinema-backdrop-still {
-    filter: sepia(0.18) brightness(0.38) contrast(1.1);
-  }
-
-  .cinema-play-emblem {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    border: 2px solid var(--gold-light);
-    background: radial-gradient(circle, rgba(139, 0, 24, 0.85), rgba(10, 2, 4, 0.95));
-    color: var(--gold-light);
-    display: flex;
-    align-items: center;
     justify-content: center;
-    margin-block-end: 8px;
-    box-shadow: 0 0 24px rgba(212, 175, 55, 0.65);
+    align-items: center;
   }
 
-  .cinema-title {
-    font-family: var(--font-editorial);
-    font-size: clamp(0.95rem, 0.8rem + 0.6vw, 1.3rem);
-    color: var(--gold-light);
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95);
+  .gallery-portrait-slot {
+    position: relative;
+    width: 100%;
   }
 
-  .cinema-sub {
-    font-family: var(--font-serif);
-    font-size: 0.62rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--gold-champagne);
-    margin-block-start: 4px;
+  .frame-variant-arch { aspect-ratio: 896 / 1200; }
+  .frame-variant-rococo { aspect-ratio: 896 / 1200; }
+  .frame-variant-cameo { aspect-ratio: 1 / 1; }
+  .frame-variant-rect { aspect-ratio: 1200 / 896; }
+
+  .gallery-photo-window {
+    position: absolute;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .gallery-photo-window::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.25);
+    pointer-events: none;
+  }
+
+  .window-arch {
+    left: 26.5%;
+    right: 26.5%;
+    top: 17.5%;
+    bottom: 21%;
+    border-radius: 50% 50% 2px 2px / 34% 34% 2px 2px;
+  }
+
+  .window-rococo {
+    left: 26%;
+    right: 26%;
+    top: 20.5%;
+    bottom: 20.5%;
+    clip-path: polygon(22% 0%, 78% 0%, 100% 18%, 100% 82%, 78% 100%, 22% 100%, 0% 82%, 0% 18%);
+  }
+
+  .window-cameo {
+    left: 24%;
+    right: 24%;
+    top: 26%;
+    bottom: 22%;
+    border-radius: 50%;
+  }
+
+  .window-rect {
+    left: 20.2%;
+    right: 19.6%;
+    top: 25.2%;
+    bottom: 25.4%;
   }
 
   /* =========================================================
@@ -1194,34 +1211,45 @@
   }
 
   /* =========================================================
-     STATIONS 6–9 & 11: BAROQUE PARCHMENT PLAQUES (18s & RSVP)
+     STATIONS 6–9 & 11: IMPERIAL ROYAL DECREE SCROLLS (18s & RSVP)
      ========================================================= */
-  .carved-parchment-plaque {
+  .imperial-scroll-plaque {
     position: relative;
-    height: min(74dvh, 660px);
-    aspect-ratio: 3 / 4;
-    filter: drop-shadow(0 30px 70px rgba(0, 0, 0, 0.96)) drop-shadow(0 0 38px rgba(212, 175, 55, 0.28));
+    height: min(74dvh, 680px);
+    max-width: 94dvw;
+    aspect-ratio: 896 / 1200;
+    filter: drop-shadow(0 28px 65px rgba(0, 0, 0, 0.96)) drop-shadow(0 0 32px rgba(212, 175, 55, 0.22));
   }
 
-  .parchment-inner-area {
+  .scroll-inner-area {
     position: absolute;
-    left: 26.2%;
-    right: 26.2%;
-    top: 25.5%;
-    bottom: 24.5%;
+    left: 20.5%;
+    right: 20.5%;
+    top: 16%;
+    bottom: 15%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     text-align: center;
     color: var(--ink-burgundy);
-    padding: 6px 6px;
+    padding: 4px 6px;
+  }
+
+  .scroll-decree-seal {
+    font-family: var(--font-serif);
+    font-size: clamp(0.46rem, 0.42rem + 0.16vw, 0.58rem);
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #7d5a16;
+    margin-block-end: 2px;
   }
 
   .parchment-heading {
     font-family: var(--font-editorial);
     font-weight: 700;
-    font-size: clamp(1.15rem, 0.9rem + 0.8vw, 1.55rem);
+    font-size: clamp(1.18rem, 0.92rem + 0.85vw, 1.65rem);
     color: var(--crimson-royal);
     letter-spacing: 0.05em;
     line-height: 1.08;
@@ -1233,7 +1261,7 @@
     font-size: clamp(0.75rem, 0.65rem + 0.3vw, 0.92rem);
     color: var(--ink-burgundy);
     border-block-end: 1px solid rgba(125, 90, 22, 0.45);
-    padding-block-end: 4px;
+    padding-block-end: 5px;
     margin-block-start: 2px;
     width: 100%;
   }
@@ -1242,14 +1270,14 @@
     list-style: none;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 3px 10px;
+    gap: 5px 12px;
     width: 100%;
     text-align: start;
   }
 
   .parchment-18-grid li {
     font-family: var(--font-body);
-    font-size: clamp(0.6rem, 0.48rem + 0.28vw, 0.78rem);
+    font-size: clamp(0.64rem, 0.5rem + 0.32vw, 0.86rem);
     font-weight: 600;
     color: #2b0308;
     white-space: nowrap;
@@ -1264,11 +1292,19 @@
 
   .parchment-footer-sig {
     font-family: var(--font-serif);
-    font-size: 0.52rem;
+    font-size: clamp(0.46rem, 0.42rem + 0.12vw, 0.56rem);
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--crimson-royal);
     opacity: 0.85;
+  }
+
+  .attire-debutante-note {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: clamp(0.84rem, 0.76rem + 0.25vw, 1.02rem);
+    color: rgba(247, 228, 158, 0.9);
+    letter-spacing: 0.03em;
   }
 
   /* =========================================================
@@ -1364,7 +1400,9 @@
   }
 
   .parchment-radio-pill {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     padding: 5px 6px;
     border: 1px solid rgba(125, 90, 22, 0.55);
@@ -1617,41 +1655,104 @@
       display: none;
     }
 
-    .royal-gallery-constellation {
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .gallery-wing.left-wing,
-    .gallery-wing.right-wing {
-      transform: none;
-    }
-
-    .gallery-center-column {
-      grid-column: 1 / -1;
-      order: -1;
-      max-width: 310px;
-      margin-inline: auto;
-      width: 100%;
+    .royal-gallery-salon {
+      grid-template-columns: repeat(2, minmax(135px, 210px));
+      gap: 14px 12px;
     }
   }
 
   @media (max-width: 600px) {
     .spatial-station {
-      padding: 58px 14px 48px;
+      padding: 54px 12px 44px;
     }
 
-    .carved-parchment-plaque {
-      height: min(70dvh, 520px);
-      max-width: 92dvw;
+    .hero-sculpture-name {
+      font-size: clamp(3.3rem, 13vw, 4.8rem);
+      gap: 0.08em 0.24em;
+    }
+
+    .royal-gallery-salon {
+      grid-template-columns: repeat(2, minmax(125px, 44dvw));
+      gap: 10px 8px;
+    }
+
+    .imperial-scroll-plaque {
+      width: min(94dvw, calc(75dvh * 0.746), 430px);
+      height: auto;
+    }
+
+    .scroll-inner-area {
+      left: 18.5%;
+      right: 18.5%;
+      top: 15.5%;
+      bottom: 14.5%;
+      padding: 2px 4px;
+    }
+
+    .parchment-heading {
+      font-size: 1.08rem;
+    }
+
+    .parchment-sub {
+      font-size: 0.72rem;
+      padding-block-end: 3px;
+    }
+
+    .parchment-18-grid {
+      gap: 3px 6px;
+    }
+
+    .parchment-18-grid li {
+      font-size: 0.62rem;
+    }
+
+    .rsvp-inner-form {
+      gap: 3px;
+    }
+
+    .parchment-field label {
+      font-size: 0.48rem;
+    }
+
+    .parchment-field input,
+    .parchment-field select {
+      font-size: 0.78rem;
+      padding: 2px 4px;
+    }
+
+    .parchment-radio-pill {
+      font-size: 0.46rem;
+      padding: 4px 3px;
+      line-height: 1.15;
+    }
+
+    .brass-stamp-handle {
+      width: 22px;
+      height: 22px;
+      margin-block-end: -5px;
+    }
+
+    .molten-wax-btn {
+      width: 58px;
+      height: 58px;
+      font-size: 0.42rem;
+    }
+
+    .orbs-sanctuary-wrap {
+      width: 94dvw;
+      padding: 4px 2px;
+    }
+
+    #orbs-canvas {
+      height: 138px;
     }
 
     .orbs-caption-row {
-      gap: 8px;
+      gap: 6px;
     }
 
-    .orbs-caption-row h3 { font-size: 0.6rem; letter-spacing: 0.08em; }
-    .orbs-caption-row p { font-size: 0.72rem; }
+    .orbs-caption-row h3 { font-size: 0.58rem; letter-spacing: 0.06em; }
+    .orbs-caption-row p { font-size: 0.7rem; }
 
     .venue-modal-body {
       flex-direction: column;
