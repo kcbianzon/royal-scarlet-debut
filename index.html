@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Rhian Jade Bianzon — A Decade and Eight | January 9, 2027</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="./assets/index-CBpudKA3.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-c6V9KN6E.css">
+</head>
+<body class="locked-at-entrance">
+
+  <!-- Top Walkthrough Progress Bar -->
+  <div id="progress" aria-hidden="true"></div>
+
+  <!-- Full-Viewport Single-Layer Three.js 3D Royal Ballroom Canvas -->
+  <div class="canvas-wrapper" aria-hidden="true">
+    <canvas id="webgl-canvas"></canvas>
+  </div>
+
+  <!-- Soft Candlelight Glow Following Pointer -->
+  <div id="cursor-light" aria-hidden="true"></div>
+
+  <!-- Velvet & Gold Curtain Teleport Transition Overlay -->
+  <div id="curtain-transition" class="curtain-transition" aria-hidden="true">
+    <div class="curtain-wing left"></div>
+    <div class="curtain-wing right"></div>
+    <div class="curtain-crest">Rhian Jade Bianzon</div>
+  </div>
+
+  <!-- =================================================================
+       OPENING GATE: SEAMLESS ROYAL VELVET CURTAIN STAGE & ENVELOPE
+       (Click the Gold Rose Wax Seal -> Card Rises -> Zooms Straight
+        Into the Grand Royal Ballroom!)
+       ================================================================= -->
+  <section id="envelope-gate" aria-label="Royal Invitation Envelope">
+    <div class="curtain-stage-bg">
+      <img
+        src="./assets/royal_curtain_backdrop.jpg"
+        alt="Crimson velvet opera stage curtains and candlelit ballroom backdrop"
+        fetchpriority="high"
+        width="1920"
+        height="1080"
+        class="curtain-stage-img"
+      />
+    </div>
+
+    <div class="parting-curtains" aria-hidden="true">
+      <div class="curtain-panel left"></div>
+      <div class="curtain-panel right"></div>
+    </div>
+
+    <div id="envelope-zoom-stage" class="envelope-zoom-stage">
+      <div id="envelope-closed-wrap" class="envelope-closed-wrap">
+        <img
+          src="./assets/envelope_cutout.png"
+          alt="Black velvet and crimson satin envelope with embossed gold rose wax seal"
+          fetchpriority="high"
+          width="880"
+          height="620"
+          class="envelope-cutout-img"
+        />
+        <button id="wax-seal-open-btn" type="button" class="wax-seal-trigger" aria-label="Open Royal Invitation">
+          <span class="seal-glow-ring" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <div id="popout-invitation-letter" class="popout-invitation-letter">
+        <img
+          src="./assets/parchment_clean.png"
+          alt=""
+          fetchpriority="low"
+          width="720"
+          height="960"
+          class="popout-letter-bg"
+        />
+        <div class="popout-letter-content">
+          <svg class="royal-gold-emblem small" aria-hidden="true" viewBox="0 0 64 32">
+            <path d="M8 24h48l4-14-14 7-14-13-14 13-14-7z" fill="currentColor" opacity="0.85"/>
+            <rect x="10" y="26" width="44" height="3" rx="1.5" fill="currentColor"/>
+          </svg>
+          <p class="letter-script-intro">You are cordially invited<br/>to the debut celebration of</p>
+          <div class="letter-debutante-name">Rhian Jade</div>
+          <div class="letter-debutante-surname">Bianzon</div>
+          <div class="letter-subtitle">A Decade and Eight</div>
+          <div class="letter-date-banner">
+            <span>Saturday</span>
+            <strong>09</strong>
+            <span>January</span>
+          </div>
+          <div class="letter-year-venue">2027 &middot; Five O'Clock in the Evening</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="entrance-hud" class="entrance-hud">
+      <p class="entrance-hint">Tap the Gold Rose Wax Seal to Open</p>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       FLOATING TOP-RIGHT NAVIGATION (Ballroom Map & Audio Controls)
+       ================================================================= -->
+  <header id="navigation-ui" class="navigation-ui hidden-until-entered">
+    <nav class="nav-controls-right" aria-label="Ballroom navigation and audio">
+      <button id="map-toggle-btn" type="button" class="nav-circle-btn" aria-label="Toggle Ballroom Chapter Map" aria-expanded="false">
+        <div class="hamburger-lines" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </button>
+
+      <button id="audio-menu-btn" type="button" class="nav-circle-btn" aria-label="Audio Settings" aria-expanded="false">
+        <svg viewBox="0 0 24 24" class="nav-svg-icon" aria-hidden="true">
+          <path d="M11 5L6 9H2v6h4l5 4V5z" />
+          <path d="M15 9a5 5 0 0 1 0 6" />
+          <path d="M18 5a9 9 0 0 1 0 14" />
+        </svg>
+      </button>
+    </nav>
+
+    <!-- Dropdown Panel: Royal Ballroom Chapter Map -->
+    <div id="ballroom-map-panel" class="hud-dropdown-panel map-panel" role="dialog" aria-label="Ballroom Chapter Map">
+      <div class="panel-header">
+        <h3>Ballroom Map</h3>
+        <button id="close-map-btn" type="button" class="panel-close-btn" aria-label="Close Map">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <ul class="chapter-map-list">
+        <li>
+          <button type="button" class="chapter-jump-btn" data-station-index="0">
+            <span class="chapter-num">I</span>
+            <span class="chapter-info"><strong>Rhian Jade Bianzon</strong><small>Grand Entrance</small></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="chapter-jump-btn" data-station-index="1">
+            <span class="chapter-num">II</span>
+            <span class="chapter-info"><strong>Royal Portrait Mirror</strong><small>Debutante Showcase</small></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="chapter-jump-btn" data-station-index="2">
+            <span class="chapter-num">III</span>
+            <span class="chapter-info"><strong>January 9, 2027</strong><small>The Royal Countdown</small></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="chapter-jump-btn" data-station-index="3">
+            <span class="chapter-num">IV</span>
+            <span class="chapter-info"><strong>Location Sanctuary</strong><small>Ballroom Directions &amp; QR</small></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="chapter-jump-btn" data-station-index="4">
+            <span class="chapter-num">V</span>
+            <span class="chapter-info"><strong>Portrait Gallery &amp; Film</strong><small>Pre-Debut Collection</small></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="chapter-jump-btn" data-station-index="5">
+            <span class="chapter-num">VI</span>
+            <span class="chapter-info"><strong>Enchanted Rose Cloche</strong><small>The Eighteenth Program</small></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="chapter-jump-btn" data-station-index="6">
+            <span class="chapter-num">VII</span>
+            <span class="chapter-info"><strong>18 Roses</strong><small>Gentlemen of the Waltz</small></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="chapter-jump-btn" data-station-index="7">
+            <span class="chapter-num">VIII</span>
+            <span class="chapter-info"><strong>18 Candles</strong><small>Ladies Lighting the Path</small></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="chapter-jump-btn" data-station-index="8">
+            <span class="chapter-num">IX</span>
+            <span class="chapter-info"><strong>18 Treasures</strong><small>Tokens of Wisdom</small></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="chapter-jump-btn" data-station-index="9">
+            <span class="chapter-num">X</span>
+            <span class="chapter-info"><strong>18 Blue Bills</strong><small>Blessings of Grace</small></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="chapter-jump-btn" data-station-index="10">
+            <span class="chapter-num">XI</span>
+            <span class="chapter-info"><strong>Attire &amp; Gift Guide</strong><small>Formal Swatches</small></span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="chapter-jump-btn" data-station-index="11">
+            <span class="chapter-num">XII</span>
+            <span class="chapter-info"><strong>Royal RSVP</strong><small>Stamp &amp; Seal Attendance</small></span>
+          </button>
+        </li>
+        <li>
+          <button id="replay-envelope-btn" type="button" class="chapter-jump-btn">
+            <span class="chapter-num">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+            </span>
+            <span class="chapter-info"><strong>Replay Envelope</strong><small>Return to Sealed Invitation</small></span>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Dropdown Panel: Audio Ambience -->
+    <div id="audio-settings-panel" class="hud-dropdown-panel audio-panel" role="dialog" aria-label="Audio Settings">
+      <div class="panel-header">
+        <h3>Audio Ambience</h3>
+        <button id="close-audio-btn" type="button" class="panel-close-btn" aria-label="Close Audio Settings">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="slider-row">
+        <div class="slider-label-row">
+          <label for="music-vol-slider">Orchestral Waltz</label>
+          <span id="music-vol-val">60%</span>
+        </div>
+        <input id="music-vol-slider" type="range" min="0" max="1" step="0.01" value="0.6" class="gold-slider" />
+      </div>
+      <div class="slider-row">
+        <div class="slider-label-row">
+          <label for="sfx-vol-slider">Chime &amp; Seal SFX</label>
+          <span id="sfx-vol-val">80%</span>
+        </div>
+        <input id="sfx-vol-slider" type="range" min="0" max="1" step="0.01" value="0.8" class="gold-slider" />
+      </div>
+      <button id="mute-all-btn" type="button" class="gold-outline-action">Mute / Unmute All</button>
+    </div>
+  </header>
+
+  <!-- =================================================================
+       SPACIOUS 12-STATION 3D BALLROOM Z-CORRIDOR
+       Every showcase gets generous negative space & silky Z-flight!
+       ================================================================= -->
+  <main id="spatial-corridor" class="spatial-corridor hidden-until-entered">
+
+    <!-- STATION 0: GRAND TYPOGRAPHIC HERO ("RHIAN JADE" splits apart as you walk!) -->
+    <section class="spatial-station" data-station="0" aria-label="Rhian Jade Bianzon Grand Entrance">
+      <div class="station-inner hero-typo-sanctuary">
+        <p class="royal-kicker">Saturday &middot; January 9, 2027</p>
+        <h1 class="hero-sculpture-name" id="hero-split-title">
+          <span class="split-word" data-dir="-1">Rhian</span>
+          <span class="split-word" data-dir="1">Jade</span>
+        </h1>
+        <p class="hero-surname">Bianzon</p>
+
+        <div class="gold-filigree-rule" aria-hidden="true">
+          <span class="rule-line"></span>
+          <svg class="royal-gold-emblem" viewBox="0 0 64 32">
+            <path d="M8 24h48l4-14-14 7-14-13-14 13-14-7z" fill="currentColor"/>
+            <rect x="10" y="26" width="44" height="2.5" rx="1.2" fill="currentColor"/>
+          </svg>
+          <span class="rule-line"></span>
+        </div>
+
+        <p class="hero-tagline">A Decade and Eight</p>
+        <p class="hero-verse">Join us for an enchanted evening of crimson roses, candlelight, and timeless elegance.</p>
+      </div>
+    </section>
+
+    <!-- STATION 1: ROYAL OVAL PORTRAIT MIRROR (Real Debutante Portrait `debutant_1.jpg` inside 24k Gold Bezel!) -->
+    <section class="spatial-station" data-station="1" aria-label="Rhian Jade Portrait Mirror">
+      <div class="station-inner centered-showcase">
+        <div
+          class="frameless-oval-masterpiece inspectable-frame"
+          data-modal-title="Rhian Jade Bianzon"
+          data-modal-subtitle="A Decade and Eight &middot; Saturday, January 9, 2027"
+          data-modal-img="./assets/photos/debutant_1.jpg"
+        >
+          <div class="oval-portrait-window">
+            <img
+              src="./assets/photos/debutant_1.jpg"
+              alt="Rhian Jade Bianzon wearing a crimson gown and silver tiara"
+              loading="lazy"
+              class="portrait-photo-graded"
+            />
+          </div>
+          <img
+            src="./assets/oval_clean.png"
+            alt=""
+            aria-hidden="true"
+            width="800"
+            height="1000"
+            class="frame-bezel-overlay"
+          />
+          <div class="oval-name-caption" aria-hidden="true">
+            <span>Rhian Jade</span>
+          </div>
+        </div>
+        <p class="showcase-footnote">The Eighteenth Birthday Celebration &middot; Five O'Clock in the Evening</p>
+      </div>
+    </section>
+
+    <!-- STATION 2: THE ROYAL COUNTDOWN (Crystal-Cutout Baroque Gold Frames — Zero Black Boxes!) -->
+    <section class="spatial-station" data-station="2" aria-label="The Royal Countdown">
+      <div class="station-inner centered-showcase">
+        <header class="section-royal-heading">
+          <svg class="royal-gold-emblem" aria-hidden="true" viewBox="0 0 64 32">
+            <path d="M8 24h48l4-14-14 7-14-13-14 13-14-7z" fill="currentColor"/>
+            <rect x="10" y="26" width="44" height="2.5" rx="1.2" fill="currentColor"/>
+          </svg>
+          <h2>The Royal Countdown</h2>
+          <p>Saturday, January 9, 2027 &middot; 5:00 PM</p>
+        </header>
+
+        <div class="countdown-frames-row">
+          <div class="carved-rect-unit">
+            <div class="rect-glass-interior">
+              <span id="cd-days" class="cd-gold-number">00</span>
+              <span class="cd-gold-label">Days</span>
+            </div>
+            <img src="./assets/rect_clean.png" alt="" aria-hidden="true" loading="lazy" width="420" height="315" class="frame-bezel-overlay" />
+          </div>
+
+          <div class="carved-rect-unit">
+            <div class="rect-glass-interior">
+              <span id="cd-hours" class="cd-gold-number">00</span>
+              <span class="cd-gold-label">Hours</span>
+            </div>
+            <img src="./assets/rect_clean.png" alt="" aria-hidden="true" loading="lazy" width="420" height="315" class="frame-bezel-overlay" />
+          </div>
+
+          <div class="carved-rect-unit">
+            <div class="rect-glass-interior">
+              <span id="cd-mins" class="cd-gold-number">00</span>
+              <span class="cd-gold-label">Minutes</span>
+            </div>
+            <img src="./assets/rect_clean.png" alt="" aria-hidden="true" loading="lazy" width="420" height="315" class="frame-bezel-overlay" />
+          </div>
+
+          <div class="carved-rect-unit">
+            <div class="rect-glass-interior">
+              <span id="cd-secs" class="cd-gold-number">00</span>
+              <span class="cd-gold-label">Seconds</span>
+            </div>
+            <img src="./assets/rect_clean.png" alt="" aria-hidden="true" loading="lazy" width="420" height="315" class="frame-bezel-overlay" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATION 3: LOCATION SANCTUARY (Ballroom Reception Venue & Golden QR Emblem) -->
+    <section class="spatial-station" data-station="3" aria-label="Location Sanctuary">
+      <div class="station-inner centered-showcase">
+        <header class="section-royal-heading">
+          <svg class="royal-gold-emblem" aria-hidden="true" viewBox="0 0 24 24" width="28" height="28">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" fill="currentColor"/>
+          </svg>
+          <h2>Location Sanctuary</h2>
+          <p>Reception Doors Open at Five O'Clock</p>
+        </header>
+
+        <div class="location-sanctuary-trio">
+          <div
+            class="carved-location-frame inspectable-frame"
+            data-modal-title="Golden Venue Pass"
+            data-modal-subtitle="Scan or Open Google Maps for The Grand Royal Ballroom"
+          >
+            <div class="rect-glass-interior">
+              <canvas id="inline-qr-canvas" width="96" height="96" class="inline-qr-canvas"></canvas>
+              <span class="mirror-caption">Scan Directions</span>
+            </div>
+            <img src="./assets/rect_clean.png" alt="" aria-hidden="true" loading="lazy" width="420" height="315" class="frame-bezel-overlay" />
+          </div>
+
+          <div class="location-center-inscription">
+            <h3 class="inscription-venue">The Grand Royal Ballroom</h3>
+            <p class="inscription-address">Celebrating the Eighteenth Debut of Rhian Jade Bianzon</p>
+            <div class="location-cta-group">
+              <button id="open-venue-modal-btn" type="button" class="royal-gold-cta">Venue Pass &amp; QR</button>
+              <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" class="royal-outline-cta">Google Maps</a>
+            </div>
+          </div>
+
+          <div
+            class="carved-location-frame inspectable-frame"
+            data-modal-title="The Grand Royal Ballroom"
+            data-modal-subtitle="Saturday, January 9, 2027 &middot; Formal Evening Reception"
+            data-modal-img="./assets/royal_ballroom_bg.jpg"
+          >
+            <div class="rect-photo-window">
+              <img src="./assets/royal_ballroom_bg.jpg" alt="Interior of The Grand Royal Ballroom" loading="lazy" class="portrait-photo-graded" />
+            </div>
+            <img src="./assets/rect_clean.png" alt="" aria-hidden="true" loading="lazy" width="420" height="315" class="frame-bezel-overlay" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATION 4: THE ROYAL PORTRAIT GALLERY (All 4 Debutante Portraits + Pre-Debut Film) -->
+    <section class="spatial-station" data-station="4" aria-label="Royal Portrait Gallery">
+      <div class="station-inner centered-showcase">
+        <header class="section-royal-heading compact-heading">
+          <h2>Royal Portrait Gallery</h2>
+          <p>Tap any portrait to inspect in full</p>
+        </header>
+
+        <div class="royal-gallery-constellation">
+          <div class="gallery-wing left-wing">
+            <div
+              class="carved-gallery-frame inspectable-frame"
+              data-modal-title="Portrait I — Royal Tiara"
+              data-modal-subtitle="Rhian Jade Bianzon &middot; Pre-Debut Collection"
+              data-modal-img="./assets/photos/debutant_4.jpg"
+            >
+              <div class="rect-photo-window">
+                <img src="./assets/photos/debutant_4.jpg" alt="Rhian Jade Bianzon portrait smiling in crimson dress" loading="lazy" class="portrait-photo-graded" />
+              </div>
+              <img src="./assets/rect_clean.png" alt="" aria-hidden="true" loading="lazy" width="520" height="390" class="frame-bezel-overlay" />
+            </div>
+
+            <div
+              class="carved-gallery-frame inspectable-frame"
+              data-modal-title="Portrait III — Midnight Velvet"
+              data-modal-subtitle="Rhian Jade Bianzon &middot; Pre-Debut Collection"
+              data-modal-img="./assets/photos/debutant_3.jpg"
+            >
+              <div class="rect-photo-window">
+                <img src="./assets/photos/debutant_3.jpg" alt="Rhian Jade Bianzon seated portrait in crimson floral gown" loading="lazy" class="portrait-photo-graded" />
+              </div>
+              <img src="./assets/rect_clean.png" alt="" aria-hidden="true" loading="lazy" width="520" height="390" class="frame-bezel-overlay" />
+            </div>
+          </div>
+
+          <div class="gallery-center-column">
+            <div
+              class="carved-cinema-masterpiece inspectable-frame"
+              data-modal-title="Pre-Debut Film — Save the Date"
+              data-modal-subtitle="Rhian Jade Bianzon &middot; January 9, 2027 Teaser"
+              data-modal-img="./assets/photos/debutant_1.jpg"
+            >
+              <div class="rect-photo-window">
+                <img src="./assets/photos/debutant_1.jpg" alt="" loading="lazy" class="portrait-photo-graded cinema-backdrop-still" />
+              </div>
+              <div class="rect-glass-interior cinema-interior">
+                <div class="cinema-play-emblem" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <div class="cinema-title">Pre-Debut Film</div>
+                <div class="cinema-sub">Save the Date &middot; 03:18</div>
+              </div>
+              <img src="./assets/rect_clean.png" alt="" aria-hidden="true" loading="lazy" width="760" height="570" class="frame-bezel-overlay" />
+            </div>
+          </div>
+
+          <div class="gallery-wing right-wing">
+            <div
+              class="carved-gallery-frame inspectable-frame"
+              data-modal-title="Portrait II — Crimson Elegance"
+              data-modal-subtitle="Rhian Jade Bianzon &middot; Pre-Debut Collection"
+              data-modal-img="./assets/photos/debutant_2.jpg"
+            >
+              <div class="rect-photo-window">
+                <img src="./assets/photos/debutant_2.jpg" alt="Rhian Jade Bianzon seated editorial pose in red dress" loading="lazy" class="portrait-photo-graded" />
+              </div>
+              <img src="./assets/rect_clean.png" alt="" aria-hidden="true" loading="lazy" width="520" height="390" class="frame-bezel-overlay" />
+            </div>
+
+            <div
+              class="carved-gallery-frame inspectable-frame"
+              data-modal-title="Portrait IV — Golden Hour"
+              data-modal-subtitle="Rhian Jade Bianzon &middot; Pre-Debut Collection"
+              data-modal-img="./assets/photos/debutant_5.jpg"
+            >
+              <div class="rect-photo-window">
+                <img src="./assets/photos/debutant_5.jpg" alt="Rhian Jade Bianzon over-the-shoulder tiara pose" loading="lazy" class="portrait-photo-graded" />
+              </div>
+              <img src="./assets/rect_clean.png" alt="" aria-hidden="true" loading="lazy" width="520" height="390" class="frame-bezel-overlay" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATION 5: THE EIGHTEENTH PROGRAM — ENCHANTED ROSE CLOCHE SANCTUARY -->
+    <section class="spatial-station" data-station="5" aria-label="Enchanted Rose Cloche Sanctuary">
+      <div class="station-inner centered-showcase">
+        <header class="section-royal-heading compact-heading">
+          <h2>The Eighteenth Program</h2>
+          <p>Honoring the cherished circles in Rhian Jade's life</p>
+        </header>
+
+        <div class="cloche-sanctuary-showcase">
+          <img
+            src="./assets/cloche_clean.png"
+            alt="Enchanted crimson and gold rose inside a crystal glass bell jar flanked by lit golden candelabras"
+            loading="lazy"
+            width="1280"
+            height="720"
+            class="clean-cutout-img"
+          />
+          <canvas id="cloche-sparks-canvas" class="cloche-sparks-canvas" aria-hidden="true"></canvas>
+        </div>
+
+        <p class="showcase-footnote">Scroll forward as each parchment plaque blooms open before you</p>
+      </div>
+    </section>
+
+    <!-- STATION 6: I · 18 ROSES (Pops Automatically on Scroll) -->
+    <section class="spatial-station" data-station="6" aria-label="Eighteen Roses">
+      <div class="station-inner centered-showcase">
+        <p class="stage-chapter-kicker">Chapter I &middot; The Waltz</p>
+        <div class="carved-parchment-plaque">
+          <img src="./assets/parchment_clean.png" alt="" aria-hidden="true" loading="lazy" width="760" height="1010" class="clean-cutout-img" />
+          <div class="parchment-inner-area">
+            <div class="parchment-header-block">
+              <h2 class="parchment-heading">18 Roses</h2>
+              <p class="parchment-sub">The Gentlemen of the Royal Waltz</p>
+            </div>
+            <ol id="list-18-roses" class="parchment-18-grid"></ol>
+            <div class="parchment-footer-sig">Rhian Jade Bianzon &middot; January 9, 2027</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATION 7: II · 18 CANDLES (Pops Automatically on Scroll) -->
+    <section class="spatial-station" data-station="7" aria-label="Eighteen Candles">
+      <div class="station-inner centered-showcase">
+        <p class="stage-chapter-kicker">Chapter II &middot; Wishes of Light</p>
+        <div class="carved-parchment-plaque">
+          <img src="./assets/parchment_clean.png" alt="" aria-hidden="true" loading="lazy" width="760" height="1010" class="clean-cutout-img" />
+          <div class="parchment-inner-area">
+            <div class="parchment-header-block">
+              <h2 class="parchment-heading">18 Candles</h2>
+              <p class="parchment-sub">The Ladies Lighting the Path</p>
+            </div>
+            <ol id="list-18-candles" class="parchment-18-grid"></ol>
+            <div class="parchment-footer-sig">Rhian Jade Bianzon &middot; January 9, 2027</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATION 8: III · 18 TREASURES (Pops Automatically on Scroll) -->
+    <section class="spatial-station" data-station="8" aria-label="Eighteen Treasures">
+      <div class="station-inner centered-showcase">
+        <p class="stage-chapter-kicker">Chapter III &middot; Tokens of Wisdom</p>
+        <div class="carved-parchment-plaque">
+          <img src="./assets/parchment_clean.png" alt="" aria-hidden="true" loading="lazy" width="760" height="1010" class="clean-cutout-img" />
+          <div class="parchment-inner-area">
+            <div class="parchment-header-block">
+              <h2 class="parchment-heading">18 Treasures</h2>
+              <p class="parchment-sub">Keepsakes &amp; Guiding Blessings</p>
+            </div>
+            <ol id="list-18-treasures" class="parchment-18-grid"></ol>
+            <div class="parchment-footer-sig">Rhian Jade Bianzon &middot; January 9, 2027</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATION 9: IV · 18 BLUE BILLS (Pops Automatically on Scroll) -->
+    <section class="spatial-station" data-station="9" aria-label="Eighteen Blue Bills">
+      <div class="station-inner centered-showcase">
+        <p class="stage-chapter-kicker">Chapter IV &middot; Prosperity &amp; Grace</p>
+        <div class="carved-parchment-plaque">
+          <img src="./assets/parchment_clean.png" alt="" aria-hidden="true" loading="lazy" width="760" height="1010" class="clean-cutout-img" />
+          <div class="parchment-inner-area">
+            <div class="parchment-header-block">
+              <h2 class="parchment-heading">18 Blue Bills</h2>
+              <p class="parchment-sub">Blessings for a Radiant Future</p>
+            </div>
+            <ol id="list-18-bills" class="parchment-18-grid"></ol>
+            <div class="parchment-footer-sig">Rhian Jade Bianzon &middot; January 9, 2027</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATION 10: ATTIRE & GIFT GUIDE (Dedicated Breathing Space for 3D PBR Swatch Orbs) -->
+    <section class="spatial-station" data-station="10" aria-label="Attire and Gift Guide">
+      <div class="station-inner centered-showcase">
+        <header class="section-royal-heading">
+          <h2>Attire &amp; Gift Guide</h2>
+          <p>Formal Evening Attire &middot; Royal Crimson, 24k Gold &amp; Obsidian Black</p>
+        </header>
+
+        <div class="orbs-sanctuary-wrap">
+          <canvas id="orbs-canvas"></canvas>
+          <div class="orbs-caption-row">
+            <div>
+              <h3>Royal Crimson</h3>
+              <p>Satin &amp; Silk Evening Wear</p>
+            </div>
+            <div>
+              <h3>24k Brushed Gold</h3>
+              <p>Metallic Filigree &amp; Accents</p>
+            </div>
+            <div>
+              <h3>Obsidian Black</h3>
+              <p>Velvet &amp; Black Tie</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="gift-guide-note">
+          Your presence at Rhian Jade's debut is our greatest joy. Should you wish to honor her with a gift, a monetary blessing toward her next chapter is deeply appreciated.
+        </p>
+      </div>
+    </section>
+
+    <!-- STATION 11: ROYAL WAX-STAMP RSVP FINALE (Dedicated Centerpiece!) -->
+    <section class="spatial-station" data-station="11" aria-label="Royal RSVP">
+      <div class="station-inner centered-showcase">
+        <p class="stage-chapter-kicker">Kindly Respond by December 20, 2026</p>
+        <div class="carved-parchment-plaque rsvp-plaque">
+          <img src="./assets/parchment_clean.png" alt="" aria-hidden="true" loading="lazy" width="760" height="1010" class="clean-cutout-img" />
+          <form id="rsvp-parchment-form" class="parchment-inner-area rsvp-inner-form">
+            <div class="parchment-header-block">
+              <h2 class="parchment-heading">Royal RSVP</h2>
+              <p class="parchment-sub">Rhian Jade Bianzon &middot; January 9, 2027</p>
+            </div>
+
+            <div class="parchment-field">
+              <label for="rsvp-name">Honored Guest Name</label>
+              <input id="rsvp-name" type="text" required placeholder="Enter your full name..." autocomplete="name" />
+            </div>
+
+            <div class="parchment-radio-row">
+              <label class="parchment-radio-pill">
+                <input type="radio" name="rsvp-attend" value="Gladly Attending" checked />
+                <span>Gladly Attending</span>
+              </label>
+              <label class="parchment-radio-pill">
+                <input type="radio" name="rsvp-attend" value="Regretfully Declines" />
+                <span>Regretfully Declines</span>
+              </label>
+            </div>
+
+            <div class="parchment-field">
+              <label for="rsvp-seats">Reserved Seats</label>
+              <select id="rsvp-seats">
+                <option value="1">1 Reserved Seat</option>
+                <option value="2">2 Reserved Seats</option>
+                <option value="3">3 Reserved Seats</option>
+                <option value="4">4 Reserved Seats</option>
+              </select>
+            </div>
+
+            <div class="parchment-field">
+              <label for="rsvp-wish">Birthday Wish for Rhian Jade</label>
+              <input id="rsvp-wish" type="text" placeholder="Write a personal wish or blessing..." />
+            </div>
+
+            <div id="wax-stamp-zone" class="wax-stamp-zone">
+              <div class="brass-stamp-handle" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M5 17h14l2-8-5 4-4-7-4 7-5-4z"/></svg>
+              </div>
+              <button id="stamp-rsvp-btn" type="submit" class="molten-wax-btn">
+                Stamp &amp; Seal<br/>Your RSVP
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Minimal Scroll Affordance (NO bottom Roman numerals — navigation handles chapter jumps!) -->
+  <div id="walk-affordance" class="walk-affordance hidden-until-entered" aria-hidden="true">
+    <span class="mouse-wheel-icon"></span>
+    <span>Scroll or Swipe to Walk Through the Ballroom</span>
+  </div>
+
+  <!-- Native <dialog closedby="any"> Modal for Portrait Inspection -->
+  <dialog id="frame-lightbox" closedby="any" aria-labelledby="lightbox-title" class="integrated-royal-dialog">
+    <div class="frameless-rsvp-sanctuary">
+      <button id="close-lightbox-btn" type="button" class="floating-close-icon" aria-label="Close Portrait Preview">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <h2 id="lightbox-title" class="rsvp-sanctuary-title">Rhian Jade Bianzon</h2>
+      <p id="lightbox-desc" class="rsvp-sanctuary-subtitle">A Decade and Eight &middot; Saturday, January 9, 2027</p>
+      <div class="lightbox-frame-preview">
+        <img id="lightbox-img" src="./assets/photos/debutant_1.jpg" alt="Rhian Jade Bianzon portrait preview" class="lightbox-portrait-img" />
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Native <dialog closedby="any"> Modal for Venue QR -->
+  <dialog id="venue-modal" closedby="any" aria-labelledby="venue-modal-title" class="integrated-royal-dialog">
+    <div class="frameless-rsvp-sanctuary">
+      <button id="close-venue-modal-btn" type="button" class="floating-close-icon" aria-label="Close Venue Directions">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <h2 id="venue-modal-title" class="rsvp-sanctuary-title">The Grand Royal Ballroom</h2>
+      <p class="rsvp-sanctuary-subtitle">Saturday, January 9, 2027 &middot; Doors Open at 5:00 PM</p>
+
+      <div class="venue-modal-body">
+        <canvas id="qr-canvas" width="180" height="180" class="gold-qr-canvas"></canvas>
+        <div class="venue-modal-details">
+          <h3>Rhian Jade Bianzon's Debut</h3>
+          <p>Formal Evening Attire &middot; Royal Crimson, 24k Gold &amp; Obsidian Black</p>
+          <p class="venue-modal-note">Scan the golden QR emblem or open Google Maps below for direct navigation to the reception ballroom.</p>
+          <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" class="royal-gold-cta">
+            Open in Google Maps
+          </a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+</body>
+</html>
