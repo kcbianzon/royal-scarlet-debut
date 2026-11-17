@@ -5,9 +5,9 @@ import gsap from 'gsap';
    0. PRODUCTION CONSTANTS (Rhian Jade Bianzon • January 9, 2027)
    ========================================================================= */
 const DEBUT_DATE_ISO = '2027-01-09T17:00:00+08:00';
-const TOTAL_STATIONS = 9;
+const TOTAL_STATIONS = 12;
 const STATION_STEP_Z = 1000;
-const MAX_CORRIDOR_Z = (TOTAL_STATIONS - 1) * STATION_STEP_Z; // 8000
+const MAX_CORRIDOR_Z = (TOTAL_STATIONS - 1) * STATION_STEP_Z; // 11000
 
 /* =========================================================================
    1. ROYAL ORCHESTRAL WALTZ & CHIME AUDIO ENGINE (Web Audio API)
@@ -43,7 +43,7 @@ class RoyalAudioManager {
         const start = this.ctx.currentTime + idx * 0.075;
         osc.frequency.setValueAtTime(f, start);
 
-        const peak = 0.055 * this.sfxVolume;
+        const peak = 0.052 * this.sfxVolume;
         gain.gain.setValueAtTime(0.0001, start);
         gain.gain.exponentialRampToValueAtTime(peak, start + 0.06);
         gain.gain.exponentialRampToValueAtTime(0.0001, start + 2.3);
@@ -67,7 +67,7 @@ class RoyalAudioManager {
       osc.frequency.setValueAtTime(523.25, now);
       osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.16);
       gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.exponentialRampToValueAtTime(0.022 * this.sfxVolume, now + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.02 * this.sfxVolume, now + 0.04);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
       osc.connect(gain);
       gain.connect(this.ctx.destination);
@@ -98,7 +98,7 @@ class RoyalAudioManager {
           osc.type = i === 0 ? 'triangle' : 'sine';
           const t0 = this.ctx.currentTime + i * 0.22;
           osc.frequency.setValueAtTime(freq, t0);
-          const vol = (i === 0 ? 0.04 : 0.024) * this.musicVolume;
+          const vol = (i === 0 ? 0.038 : 0.022) * this.musicVolume;
           gain.gain.setValueAtTime(0.0001, t0);
           gain.gain.exponentialRampToValueAtTime(vol, t0 + 0.18);
           gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 2.8);
@@ -138,10 +138,7 @@ function createSoftGoldParticleTexture() {
 const goldGlowTex = createSoftGoldParticleTexture();
 
 /* =========================================================================
-   3. SINGLE-LAYER 3D ROYAL BALLROOM ENVIRONMENT (`#webgl-canvas`)
-      - ONE crisp, single-layer Grand Ballroom Vista (`royal_ballroom_bg.jpg`)
-      - ZERO duplicated portal planes & ZERO double-zoom ghosting!
-      - Smooth continuous 3D camera dolly-zoom + mouse/touch parallax!
+   3. SINGLE-LAYER 3D ROYAL BALLROOM VISTA (`#webgl-canvas`)
    ========================================================================= */
 const bgCanvas = document.getElementById('webgl-canvas');
 const bgScene = new THREE.Scene();
@@ -183,18 +180,15 @@ const singleBallroomMat = new THREE.ShaderMaterial({
     varying vec2 vUv;
 
     void main() {
-      // Single clean dolly-zoom into the Grand Ballroom as you walk forward (NO double-exposure!)
-      float zoom = 1.04 + uWalkProgress * 0.24;
-      vec2 centered = (vUv - 0.5) / zoom + 0.5 + uParallax * 0.025;
+      float zoom = 1.04 + uWalkProgress * 0.28;
+      vec2 centered = (vUv - 0.5) / zoom + 0.5 + uParallax * 0.022;
       centered = clamp(centered, 0.002, 0.998);
 
       vec4 col = texture2D(uMap, centered);
-
-      // Balanced royal dimming & soft edge vignette so foreground 24k gold frames shine with 100% clarity
       float dist = length((vUv - 0.5) * vec2(1.15, 1.0));
-      float vig = 1.0 - smoothstep(0.35, 1.05, dist) * 0.52;
+      float vig = 1.0 - smoothstep(0.32, 1.04, dist) * 0.54;
 
-      gl_FragColor = vec4(col.rgb * 0.58 * vig, 1.0);
+      gl_FragColor = vec4(col.rgb * 0.56 * vig, 1.0);
     }
   `
 });
@@ -205,7 +199,7 @@ bgScene.add(ballroomVistaPlane);
 
 function fitBallroomPlaneToViewport() {
   const aspect = window.innerWidth / Math.max(1, window.innerHeight);
-  const dist = bgCamera.position.z - ballroomVistaPlane.position.z; // 14
+  const dist = bgCamera.position.z - ballroomVistaPlane.position.z;
   const vFovRad = THREE.MathUtils.degToRad(bgCamera.fov);
   const visibleHeight = 2 * Math.tan(vFovRad / 2) * dist;
   const visibleWidth = visibleHeight * aspect;
@@ -220,8 +214,7 @@ function fitBallroomPlaneToViewport() {
   ballroomVistaPlane.scale.set(w / 36, h / 20.25, 1);
 }
 
-// 3D Floating 24k Gold Candlelight Dust Particles (Soft Round Glow — No Hard Squares!)
-const dustCount = 260;
+const dustCount = 240;
 const dustGeo = new THREE.BufferGeometry();
 const dustPositions = new Float32Array(dustCount * 3);
 const dustSpeeds = new Float32Array(dustCount);
@@ -230,31 +223,30 @@ for (let i = 0; i < dustCount; i++) {
   dustPositions[i * 3] = (Math.random() - 0.5) * 22;
   dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 14;
   dustPositions[i * 3 + 2] = 6 - Math.random() * 9;
-  dustSpeeds[i] = 0.005 + Math.random() * 0.01;
+  dustSpeeds[i] = 0.0045 + Math.random() * 0.009;
 }
 dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPositions, 3));
 
 const dustMat = new THREE.PointsMaterial({
   map: goldGlowTex,
-  size: 0.22,
+  size: 0.2,
   transparent: true,
-  opacity: 0.78,
+  opacity: 0.72,
   depthWrite: false,
   blending: THREE.AdditiveBlending
 });
-const dustParticles = new THREE.Points(dustGeo, dustMat);
-bgScene.add(dustParticles);
+bgScene.add(new THREE.Points(dustGeo, dustMat));
 
 function triggerGoldBurst() {
   gsap.fromTo(
     dustMat,
-    { size: 0.42, opacity: 1.0 },
-    { size: 0.22, opacity: 0.78, duration: 1.4, ease: 'power2.out' }
+    { size: 0.4, opacity: 1.0 },
+    { size: 0.2, opacity: 0.72, duration: 1.4, ease: 'power2.out' }
   );
 }
 
 /* =========================================================================
-   4. ENCHANTED ROSE CLOCHE 3D SPARKS OVERLAY (`#cloche-sparks-canvas`)
+   4. ENCHANTED ROSE CLOCHE 3D SPARKS (`#cloche-sparks-canvas`)
    ========================================================================= */
 const clocheCanvas = document.getElementById('cloche-sparks-canvas');
 const clocheScene = new THREE.Scene();
@@ -277,7 +269,7 @@ function resizeClocheScene() {
   clocheCam.updateProjectionMatrix();
 }
 
-const cSparkCount = 95;
+const cSparkCount = 90;
 const cSparkGeo = new THREE.BufferGeometry();
 const cSparkPos = new Float32Array(cSparkCount * 3);
 for (let i = 0; i < cSparkCount; i++) {
@@ -290,7 +282,7 @@ const cSparkMat = new THREE.PointsMaterial({
   map: goldGlowTex,
   size: 0.18,
   transparent: true,
-  opacity: 0.9,
+  opacity: 0.88,
   depthWrite: false,
   blending: THREE.AdditiveBlending
 });
@@ -301,7 +293,7 @@ clocheScene.add(new THREE.Points(cSparkGeo, cSparkMat));
    ========================================================================= */
 const orbsCanvas = document.getElementById('orbs-canvas');
 const orbsScene = new THREE.Scene();
-const orbsCamera = new THREE.PerspectiveCamera(40, 520 / 170, 0.1, 50);
+const orbsCamera = new THREE.PerspectiveCamera(40, 720 / 200, 0.1, 50);
 orbsCamera.position.set(0, 0, 6.2);
 
 const orbsRenderer = new THREE.WebGLRenderer({
@@ -316,7 +308,7 @@ function resizeOrbsScene() {
   if (!orbsCanvas || !orbsCanvas.parentElement) return;
   const rect = orbsCanvas.parentElement.getBoundingClientRect();
   const w = Math.max(260, rect.width - 24);
-  const h = window.innerWidth <= 680 ? 76 : 175;
+  const h = Math.min(210, Math.max(140, window.innerHeight * 0.24));
   orbsRenderer.setSize(w, h);
   orbsRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   orbsCamera.aspect = w / h;
@@ -380,7 +372,7 @@ orbsScene.add(blackOrb);
 });
 
 /* =========================================================================
-   6. POPULATE SEPARATE 18S PARCHMENT PLAQUES (Stations 4, 5, 6, 7)
+   6. POPULATE SEPARATE 18S PARCHMENT PLAQUES (Stations 6–9)
    ========================================================================= */
 function fill18PlaqueList(olId, roleTitle) {
   const ol = document.getElementById(olId);
@@ -400,7 +392,7 @@ fill18PlaqueList('list-18-treasures', 'Treasure');
 fill18PlaqueList('list-18-bills', 'Sponsor');
 
 /* =========================================================================
-   7. LIVE COUNTDOWN TO JANUARY 9, 2027 (`2027-01-09T17:00:00+08:00`)
+   7. LIVE COUNTDOWN & GOLDEN QR CODE
    ========================================================================= */
 const DEBUT_TARGET_MS = new Date(DEBUT_DATE_ISO).getTime();
 const cdDays = document.getElementById('cd-days');
@@ -453,7 +445,7 @@ drawGoldQrCode(document.getElementById('inline-qr-canvas'), 96, 4.8, 7);
 drawGoldQrCode(document.getElementById('qr-canvas'), 180, 8.8, 15);
 
 /* =========================================================================
-   8. PORTFOLIO-STYLE OPENING ENVELOPE & ZOOM-INTO-BALLROOM SEQUENCE
+   8. OPENING ENVELOPE & ZOOM-INTO-BALLROOM SEQUENCE
    ========================================================================= */
 const envelopeGate = document.getElementById('envelope-gate');
 const envelopeZoomStage = document.getElementById('envelope-zoom-stage');
@@ -506,27 +498,18 @@ popoutLetter.addEventListener('click', () => {
 });
 
 /* =========================================================================
-   9. PORTFOLIO-STYLE 3D SPATIAL Z-CORRIDOR CONTROLLER
-      - Wheel Scroll + Touch Drag + Keyboard walk forward/backward in Z
-      - Gentle magnetic station snap when idle so every station lands 100% crisp
+   9. SILKY FLUID 3D WALKTHROUGH CAMERA (Zero Jerky Snap-Back!)
    ========================================================================= */
 const stationElements = Array.from(document.querySelectorAll('.spatial-station'));
-const stationDots = Array.from(document.querySelectorAll('.station-dot'));
+const heroSplitWords = Array.from(document.querySelectorAll('.split-word'));
+const chapterJumpBtns = Array.from(document.querySelectorAll('.chapter-jump-btn[data-station-index]'));
+const walkAffordance = document.getElementById('walk-affordance');
 const progEl = document.getElementById('progress');
 
 let targetZ = 0;
 let currentZ = 0;
-let snapTimer = null;
 
-function scheduleNearestStationSnap(delayMs = 320) {
-  if (snapTimer) clearTimeout(snapTimer);
-  snapTimer = setTimeout(() => {
-    const nearestIdx = Math.round(targetZ / STATION_STEP_Z);
-    targetZ = THREE.MathUtils.clamp(nearestIdx * STATION_STEP_Z, 0, MAX_CORRIDOR_Z);
-  }, delayMs);
-}
-
-// Wheel Scroll Navigation
+// Smooth Wheel Scroll (Direct responsive travel without tight snapping!)
 window.addEventListener(
   'wheel',
   (e) => {
@@ -534,9 +517,8 @@ window.addEventListener(
     if (e.target.closest('.hud-dropdown-panel, dialog')) return;
     e.preventDefault();
 
-    const step = THREE.MathUtils.clamp(e.deltaY * 1.65, -480, 480);
+    const step = THREE.MathUtils.clamp(e.deltaY * 1.45, -380, 380);
     targetZ = THREE.MathUtils.clamp(targetZ + step, 0, MAX_CORRIDOR_Z);
-    scheduleNearestStationSnap(280);
   },
   { passive: false }
 );
@@ -557,18 +539,17 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-// Mobile Touch Swipe Navigation
-const touchState = { startY: 0, lastY: 0, isDragging: false };
+// Mobile Touch Drag + Smooth Momentum Inertia
+const touchState = { lastY: 0, velocityY: 0, isDragging: false };
 
 window.addEventListener(
   'touchstart',
   (e) => {
     if (!hasEnteredBallroom || !e.touches.length) return;
     if (e.target.closest('.hud-dropdown-panel, dialog, input, select, button')) return;
-    touchState.startY = e.touches[0].clientY;
     touchState.lastY = e.touches[0].clientY;
+    touchState.velocityY = 0;
     touchState.isDragging = true;
-    if (snapTimer) clearTimeout(snapTimer);
   },
   { passive: true }
 );
@@ -580,32 +561,15 @@ window.addEventListener(
     const curY = e.touches[0].clientY;
     const deltaY = touchState.lastY - curY;
     touchState.lastY = curY;
+    touchState.velocityY = deltaY;
 
-    targetZ = THREE.MathUtils.clamp(targetZ + deltaY * 3.2, 0, MAX_CORRIDOR_Z);
+    targetZ = THREE.MathUtils.clamp(targetZ + deltaY * 3.4, 0, MAX_CORRIDOR_Z);
   },
   { passive: true }
 );
 
 window.addEventListener('touchend', () => {
-  if (!touchState.isDragging) return;
   touchState.isDragging = false;
-  scheduleNearestStationSnap(180);
-});
-
-// Bottom Station Dots Click
-stationDots.forEach((dot) => {
-  dot.addEventListener('click', () => {
-    const idx = parseInt(dot.dataset.stationIndex, 10);
-    if (!Number.isNaN(idx)) {
-      audio.playHoverHint();
-      const destZ = idx * STATION_STEP_Z;
-      if (Math.abs(destZ - currentZ) > STATION_STEP_Z * 1.2) {
-        teleportToStation(idx);
-      } else {
-        targetZ = destZ;
-      }
-    }
-  });
 });
 
 /* =========================================================================
@@ -663,7 +627,7 @@ function teleportToStation(stationIdx) {
   tl.to(rightWing, { xPercent: 100, duration: 0.75, ease: 'power3.inOut' }, 0.8);
 }
 
-document.querySelectorAll('.chapter-jump-btn[data-station-index]').forEach((btn) => {
+chapterJumpBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
     const idx = parseInt(btn.dataset.stationIndex, 10);
     if (!Number.isNaN(idx)) {
@@ -682,11 +646,11 @@ document.getElementById('replay-envelope-btn').addEventListener('click', () => {
 
   document.body.classList.add('locked-at-entrance');
   if (entranceHud) entranceHud.classList.remove('fade-out');
+  if (walkAffordance) walkAffordance.classList.remove('hidden-after-scroll');
   envelopeZoomStage.classList.remove('letter-popped');
   envelopeGate.classList.remove('zooming-into-ballroom', 'gate-hidden');
 });
 
-// Audio Sliders
 document.getElementById('music-vol-slider').addEventListener('input', (e) => {
   const v = parseFloat(e.target.value);
   audio.musicVolume = v;
@@ -707,7 +671,6 @@ document.getElementById('mute-all-btn').addEventListener('click', () => {
    ========================================================================= */
 function setupLightDismissDialog(dialog) {
   if (!dialog) return;
-  // Fallback for browsers without closedby support (`light-dismiss-a-dialog` guide)
   if (!('closedBy' in HTMLDialogElement.prototype)) {
     dialog.addEventListener('click', (event) => {
       if (event.target !== dialog) return;
@@ -735,12 +698,21 @@ document.getElementById('open-venue-modal-btn').addEventListener('click', () => 
   venueModal.showModal();
 });
 
+const lightboxImg = document.getElementById('lightbox-img');
 document.querySelectorAll('.inspectable-frame').forEach((frame) => {
   frame.addEventListener('click', () => {
     audio.playHoverHint();
     document.getElementById('lightbox-title').textContent = frame.dataset.modalTitle || 'Rhian Jade Bianzon';
     document.getElementById('lightbox-desc').textContent =
-      frame.dataset.modalSubtitle || 'A Decade and Eight • Saturday, January 9, 2027';
+      frame.dataset.modalSubtitle || 'A Decade and Eight · Saturday, January 9, 2027';
+    if (lightboxImg) {
+      if (frame.dataset.modalImg) {
+        lightboxImg.src = frame.dataset.modalImg;
+        lightboxImg.style.display = 'block';
+      } else {
+        lightboxImg.style.display = 'none';
+      }
+    }
     frameLightbox.showModal();
   });
 });
@@ -759,12 +731,12 @@ rsvpForm.addEventListener('submit', (e) => {
   setTimeout(() => {
     waxStampZone.classList.remove('stamping');
     stampRsvpBtn.classList.add('sealed');
-    stampRsvpBtn.innerHTML = '♛<br/>RSVP SEALED<br/>01.09.2027';
+    stampRsvpBtn.innerHTML = 'RSVP Sealed<br/>01.09.2027';
   }, 520);
 });
 
 /* =========================================================================
-   12. MAIN 60FPS RENDER & 3D SPATIAL CORRIDOR ANIMATION LOOP
+   12. MAIN 60FPS RENDER & FLUID 3D WALKTHROUGH LOOP
    ========================================================================= */
 const cursorLightEl = document.getElementById('cursor-light');
 const mouseNorm = { x: 0, y: 0 };
@@ -797,32 +769,51 @@ function animate() {
   requestAnimationFrame(animate);
   const elapsed = clock.getElapsedTime();
 
-  // Smoothly interpolate Z-corridor position & mouse parallax
-  currentZ = THREE.MathUtils.lerp(currentZ, targetZ, 0.085);
-  smoothMouse.x = THREE.MathUtils.lerp(smoothMouse.x, mouseNorm.x, 0.06);
-  smoothMouse.y = THREE.MathUtils.lerp(smoothMouse.y, mouseNorm.y, 0.06);
+  // Mobile Touch Inertia Glide
+  if (!touchState.isDragging && Math.abs(touchState.velocityY) > 0.2) {
+    targetZ = THREE.MathUtils.clamp(targetZ + touchState.velocityY * 1.15, 0, MAX_CORRIDOR_Z);
+    touchState.velocityY *= 0.94;
+  }
+
+  // Smooth inertial interpolation
+  currentZ = THREE.MathUtils.lerp(currentZ, targetZ, 0.058);
+  smoothMouse.x = THREE.MathUtils.lerp(smoothMouse.x, mouseNorm.x, 0.055);
+  smoothMouse.y = THREE.MathUtils.lerp(smoothMouse.y, mouseNorm.y, 0.055);
 
   const walkProgress = THREE.MathUtils.clamp(currentZ / MAX_CORRIDOR_Z, 0, 1);
   if (progEl) progEl.style.transform = `scaleX(${walkProgress})`;
 
-  // Update Single-Layer Ballroom Vista Shader (Smooth Dolly-Zoom + Subtle Parallax)
+  // Fade bottom scroll hint once user begins exploring
+  if (walkAffordance && hasEnteredBallroom && currentZ > 240) {
+    walkAffordance.classList.add('hidden-after-scroll');
+  }
+
+  // Update Active Chapter inside top-right Ballroom Map drawer
+  const activeIdx = Math.round(currentZ / STATION_STEP_Z);
+  chapterJumpBtns.forEach((btn) => {
+    const idx = parseInt(btn.dataset.stationIndex, 10);
+    btn.classList.toggle('active-chapter', idx === activeIdx);
+  });
+
+  // Portfolio-inspired Hero Word Split when walking past Station 0 ("Rhian   Jade")
+  const heroSplitProgress = THREE.MathUtils.clamp(currentZ / 650, 0, 1);
+  heroSplitWords.forEach((word) => {
+    const dir = parseFloat(word.dataset.dir || '0');
+    const offsetVw = dir * heroSplitProgress * 12;
+    word.style.transform = `translate3d(${offsetVw.toFixed(2)}vw, 0, 0)`;
+  });
+
+  // Update Single-Layer Ballroom Vista Shader
   singleBallroomMat.uniforms.uWalkProgress.value = walkProgress;
   singleBallroomMat.uniforms.uParallax.value.set(smoothMouse.x, smoothMouse.y);
 
-  // Update Active Station Dot
-  const activeStationIdx = Math.round(currentZ / STATION_STEP_Z);
-  stationDots.forEach((dot, idx) => {
-    dot.classList.toggle('active', idx === activeStationIdx);
-  });
-
-  // Update 3D Spatial Stations along the Z-Corridor (Tight non-overlapping window so stations NEVER ghost!)
+  // Smooth Non-Overlapping Spatial Z-Flight across all 12 Stations
   stationElements.forEach((el, idx) => {
     const stationZ = idx * STATION_STEP_Z;
-    // delta < 0 means station is ahead in the Ballroom; delta > 0 means station is passing the camera
     const delta = (currentZ - stationZ) / STATION_STEP_Z;
     const absDelta = Math.abs(delta);
 
-    if (absDelta >= 0.49) {
+    if (absDelta >= 0.52) {
       el.style.opacity = '0';
       el.style.visibility = 'hidden';
       el.classList.remove('station-active');
@@ -831,21 +822,20 @@ function animate() {
 
     el.style.visibility = 'visible';
     let opacity = 1;
-    if (absDelta > 0.12) {
-      opacity = THREE.MathUtils.clamp(1 - (absDelta - 0.12) / 0.36, 0, 1);
+    if (absDelta > 0.14) {
+      opacity = THREE.MathUtils.clamp(1 - (absDelta - 0.14) / 0.36, 0, 1);
     }
 
-    // 3D Z-Flight Transform: emerges from deep in the Ballroom, focuses at 0px, and glides past the camera
-    const zPx = delta * 520;
+    const zPx = delta * 540;
     const yPx = delta * -18;
     const scale = delta < 0 ? 1 + delta * 0.24 : 1 + delta * 0.16;
 
     el.style.opacity = opacity.toFixed(3);
-    el.style.transform = `translate3d(${(smoothMouse.x * -8 * absDelta).toFixed(1)}px, ${yPx.toFixed(1)}px, ${zPx.toFixed(1)}px) scale(${scale.toFixed(3)})`;
-    el.classList.toggle('station-active', absDelta < 0.35);
+    el.style.transform = `translate3d(${(smoothMouse.x * -10 * (1 - absDelta * 0.4)).toFixed(1)}px, ${yPx.toFixed(1)}px, ${zPx.toFixed(1)}px) scale(${scale.toFixed(3)})`;
+    el.classList.toggle('station-active', absDelta < 0.36);
   });
 
-  // Animate 3D Gold Candlelight Dust Particles
+  // 3D Gold Dust
   const dAttr = dustGeo.attributes.position;
   for (let i = 0; i < dustCount; i++) {
     let y = dAttr.getY(i) + dustSpeeds[i];
@@ -855,8 +845,8 @@ function animate() {
   dAttr.needsUpdate = true;
   bgRenderer.render(bgScene, bgCamera);
 
-  // Render Enchanted Rose Cloche 3D Sparks when near Station 3
-  if (Math.abs(currentZ - 3 * STATION_STEP_Z) < 1200) {
+  // Station 5: Cloche Sparks
+  if (Math.abs(currentZ - 5 * STATION_STEP_Z) < 1100) {
     const cAttr = cSparkGeo.attributes.position;
     for (let i = 0; i < cSparkCount; i++) {
       let cy = cAttr.getY(i) + 0.009;
@@ -867,8 +857,8 @@ function animate() {
     clocheRenderer.render(clocheScene, clocheCam);
   }
 
-  // Render 3D PBR Material Swatch Orbs when near Station 8
-  if (Math.abs(currentZ - 8 * STATION_STEP_Z) < 1200) {
+  // Station 10: 3D PBR Swatch Orbs
+  if (Math.abs(currentZ - 10 * STATION_STEP_Z) < 1100) {
     crimsonOrb.rotation.y = elapsed * 0.55;
     crimsonOrb.rotation.x = Math.sin(elapsed * 0.7) * 0.2;
     goldOrb.rotation.y = -elapsed * 0.65;

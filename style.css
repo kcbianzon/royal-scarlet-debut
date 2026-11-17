@@ -12,15 +12,22 @@
     --gold-champagne: #faefd7;
     --ink-burgundy: #3b040a;
     --font-script: 'Great Vibes', cursive;
-    --font-display: 'Cinzel Decorative', serif;
-    --font-serif: 'Cinzel', serif;
-    --font-body: 'Cormorant Garamond', serif;
+    --font-editorial: 'Playfair Display', Georgia, serif;
+    --font-serif: 'Cinzel', Georgia, serif;
+    --font-body: 'Cormorant Garamond', Georgia, serif;
     --font-ui: 'Montserrat', sans-serif;
+    --in-oklab: ;
+  }
+
+  @supports (background: linear-gradient(in oklab, white, black)) {
+    :root {
+      --in-oklab: in oklab;
+    }
   }
 }
 
 @layer reset {
-  :where(html, body, div, section, main, header, h1, h2, h3, h4, p, ul, ol, li, form, label, input, select, textarea, button, dialog) {
+  :where(html, body, div, section, main, header, nav, h1, h2, h3, h4, p, ul, ol, li, form, label, input, select, textarea, button, dialog) {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -36,16 +43,22 @@
     background-color: var(--bg-obsidian);
     color: var(--gold-champagne);
     font-family: var(--font-body);
+    line-height: 1.5;
     user-select: none;
     -webkit-user-select: none;
     -webkit-font-smoothing: antialiased;
     overscroll-behavior: none;
   }
+
+  :where(a:any-link, button, input, select, textarea):focus-visible {
+    outline: 2px solid var(--gold-light);
+    outline-offset: 3px;
+  }
 }
 
 @layer components {
   /* =========================================================
-     TOP WALK PROGRESS BAR
+     TOP WALKTHROUGH PROGRESS BAR
      ========================================================= */
   #progress {
     position: fixed;
@@ -53,17 +66,17 @@
     inset-block-start: 0;
     width: 100%;
     height: 3px;
-    background: linear-gradient(90deg, var(--crimson-royal), var(--gold-primary), var(--gold-light));
+    background: linear-gradient(90deg var(--in-oklab), var(--crimson-royal), var(--gold-primary), var(--gold-light));
     box-shadow: 0 0 14px rgba(212, 175, 55, 0.85);
     transform-origin: 0 50%;
     transform: scaleX(0);
     z-index: 95;
     pointer-events: none;
-    transition: transform 0.2s ease-out;
+    transition: transform 0.25s ease-out;
   }
 
   /* =========================================================
-     SINGLE-LAYER 3D ROYAL BALLROOM CANVAS (Zero Duplication!)
+     SINGLE-LAYER 3D BALLROOM CANVAS & CANDLELIGHT
      ========================================================= */
   .canvas-wrapper {
     position: fixed;
@@ -85,15 +98,31 @@
     width: 440px;
     height: 440px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(247, 228, 158, 0.14) 0%, rgba(139, 0, 24, 0.06) 45%, transparent 70%);
+    background: radial-gradient(circle, rgba(247, 228, 158, 0.13) 0%, rgba(139, 0, 24, 0.05) 45%, transparent 70%);
     pointer-events: none;
     z-index: 2;
     transform: translate(-50%, -50%);
     mix-blend-mode: screen;
   }
 
+  .royal-gold-emblem {
+    width: 36px;
+    height: 20px;
+    color: var(--gold-primary);
+    display: inline-block;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 10px rgba(212, 175, 55, 0.55));
+  }
+
+  .royal-gold-emblem.small {
+    width: 28px;
+    height: 15px;
+    color: var(--gold-dark);
+    filter: none;
+  }
+
   /* =========================================================
-     VELVET & GOLD CURTAIN TELEPORT TRANSITION (Portfolio Style)
+     VELVET & GOLD CURTAIN TELEPORT TRANSITION
      ========================================================= */
   .curtain-transition {
     position: fixed;
@@ -109,24 +138,18 @@
     inset-block-start: 0;
     width: 52dvw;
     height: 100dvh;
-    background:
-      repeating-linear-gradient(
-        90deg,
-        #140205 0px,
-        #6b0012 42px,
-        #220207 84px
-      );
+    background: repeating-linear-gradient(90deg, #140205 0px, #6b0012 42px, #220207 84px);
     box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.95), 0 0 60px rgba(0, 0, 0, 0.95);
   }
 
   .curtain-wing.left {
-    left: 0;
-    border-right: 4px solid var(--gold-primary);
+    inset-inline-start: 0;
+    border-inline-end: 4px solid var(--gold-primary);
   }
 
   .curtain-wing.right {
-    right: 0;
-    border-left: 4px solid var(--gold-primary);
+    inset-inline-end: 0;
+    border-inline-start: 4px solid var(--gold-primary);
   }
 
   .curtain-crest {
@@ -135,7 +158,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     font-family: var(--font-script);
-    font-size: clamp(2.2rem, 1.4rem + 3vw, 4rem);
+    font-size: clamp(2.1rem, 1.4rem + 3vw, 3.8rem);
     color: var(--gold-light);
     text-shadow: 0 0 30px rgba(212, 175, 55, 0.9);
     opacity: 0;
@@ -144,7 +167,7 @@
   }
 
   /* =========================================================
-     OPENING GATE: CRIMSON VELVET STAGE & CROPPED ENVELOPE
+     OPENING GATE: CRIMSON VELVET CURTAINS & ENVELOPE
      ========================================================= */
   #envelope-gate {
     position: fixed;
@@ -209,16 +232,13 @@
     transition: transform 1.75s cubic-bezier(0.65, 0, 0.15, 1), opacity 1.1s ease 0.45s;
   }
 
-  /* Cropped Envelope Silhouette: Zero Border, Never Tilts Like a Card! */
   .envelope-closed-wrap {
     position: relative;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    filter:
-      drop-shadow(0 36px 70px rgba(0, 0, 0, 0.96))
-      drop-shadow(0 0 42px rgba(212, 175, 55, 0.25));
+    filter: drop-shadow(0 36px 70px rgba(0, 0, 0, 0.96)) drop-shadow(0 0 42px rgba(212, 175, 55, 0.25));
     transition: transform 0.95s cubic-bezier(0.22, 1, 0.36, 1), filter 0.95s ease, opacity 0.85s ease;
   }
 
@@ -229,7 +249,6 @@
     border-radius: 6px;
   }
 
-  /* Interactive Hotspot Strictly on the Embossed 24k Gold Rose Wax Seal */
   .wax-seal-trigger {
     position: absolute;
     left: 50%;
@@ -263,10 +282,10 @@
     100% { transform: scale(1.38); opacity: 0; }
   }
 
-  /* Pop-Out Carved 24k Baroque Gold & Parchment Invitation Letter */
+  /* Pop-Out Baroque Gold & Parchment Letter */
   .popout-invitation-letter {
     position: absolute;
-    width: min(430px, 82dvw);
+    width: min(440px, 84dvw);
     aspect-ratio: 3 / 4;
     opacity: 0;
     transform: translateY(90px) scale(0.55);
@@ -288,8 +307,8 @@
     position: absolute;
     left: 25.5%;
     right: 25.5%;
-    top: 25%;
-    bottom: 23.5%;
+    top: 25.5%;
+    bottom: 24.5%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -299,40 +318,34 @@
     color: var(--ink-burgundy);
   }
 
-  .letter-crest {
-    font-size: 0.95rem;
-    color: var(--gold-dark);
-    letter-spacing: 0.24em;
-  }
-
   .letter-script-intro {
     font-family: var(--font-script);
-    font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+    font-size: clamp(1.15rem, 0.9rem + 1.1vw, 1.55rem);
     color: var(--crimson-royal);
-    line-height: 1.15;
+    line-height: 1.18;
   }
 
   .letter-debutante-name {
     font-family: var(--font-script);
-    font-size: clamp(1.9rem, 4.2vw, 2.7rem);
-    font-weight: 400;
+    font-size: clamp(1.9rem, 1.3rem + 2.6vw, 2.75rem);
     color: var(--crimson-royal);
-    line-height: 1;
+    line-height: 1.02;
   }
 
   .letter-debutante-surname {
     font-family: var(--font-serif);
-    font-size: 0.8rem;
+    font-size: 0.88rem;
     font-weight: 700;
-    letter-spacing: 0.28em;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
     color: var(--ink-burgundy);
     margin-block-start: -4px;
   }
 
   .letter-subtitle {
     font-family: var(--font-serif);
-    font-size: 0.62rem;
-    letter-spacing: 0.22em;
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
     color: var(--ink-burgundy);
     text-transform: uppercase;
   }
@@ -340,28 +353,29 @@
   .letter-date-banner {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     border-block: 1px solid rgba(125, 90, 22, 0.55);
-    padding: 3px 10px;
+    padding: 4px 12px;
     font-family: var(--font-serif);
-    font-size: 0.62rem;
-    letter-spacing: 0.15em;
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
     color: var(--ink-burgundy);
   }
 
   .letter-date-banner strong {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     color: var(--crimson-royal);
   }
 
   .letter-year-venue {
     font-family: var(--font-serif);
-    font-size: 0.54rem;
-    letter-spacing: 0.16em;
+    font-size: 0.56rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
     color: var(--ink-burgundy);
   }
 
-  /* Step 1: Letter Rises Out of the Envelope */
   .envelope-zoom-stage.letter-popped .envelope-closed-wrap {
     transform: translateY(68px) scale(0.86);
     filter: brightness(0.45) blur(1.5px);
@@ -373,19 +387,13 @@
     pointer-events: auto;
   }
 
-  /* Step 2: Camera Zooms Straight Into the Opened Envelope & Parts Curtains! */
   #envelope-gate.zooming-into-ballroom .curtain-stage-bg {
     transform: scale(1.65);
     filter: brightness(1.25) blur(6px);
   }
 
-  #envelope-gate.zooming-into-ballroom .curtain-panel.left {
-    transform: translateX(-100%);
-  }
-
-  #envelope-gate.zooming-into-ballroom .curtain-panel.right {
-    transform: translateX(100%);
-  }
+  #envelope-gate.zooming-into-ballroom .curtain-panel.left { transform: translateX(-100%); }
+  #envelope-gate.zooming-into-ballroom .curtain-panel.right { transform: translateX(100%); }
 
   #envelope-gate.zooming-into-ballroom .envelope-zoom-stage {
     transform: scale(3.5) translateY(-12px);
@@ -404,14 +412,12 @@
     transition: opacity 0.6s ease;
   }
 
-  .entrance-hud.fade-out {
-    opacity: 0;
-  }
+  .entrance-hud.fade-out { opacity: 0; }
 
   .entrance-hint {
     font-family: var(--font-serif);
-    font-size: clamp(0.68rem, 0.55rem + 0.45vw, 0.88rem);
-    letter-spacing: 0.26em;
+    font-size: clamp(0.7rem, 0.58rem + 0.4vw, 0.88rem);
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--gold-light);
     text-shadow: 0 2px 16px rgba(0, 0, 0, 0.98), 0 0 20px rgba(212, 175, 55, 0.5);
@@ -425,7 +431,7 @@
   }
 
   /* =========================================================
-     PORTFOLIO-STYLE FLOATING NAVIGATION UI (Top-Right Controls)
+     TOP-RIGHT FLOATING NAVIGATION & AUDIO
      ========================================================= */
   .hidden-until-entered {
     opacity: 0;
@@ -447,16 +453,16 @@
 
   .nav-controls-right {
     position: fixed;
-    top: 16px;
-    right: 20px;
+    inset-block-start: 18px;
+    inset-inline-end: 20px;
     display: flex;
     gap: 10px;
     pointer-events: auto;
   }
 
   .nav-circle-btn {
-    width: 44px;
-    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
     border-radius: 50%;
     background: radial-gradient(circle at 30% 30%, rgba(56, 5, 14, 0.92), rgba(8, 2, 4, 0.96));
     border: 1.5px solid var(--gold-primary);
@@ -466,11 +472,11 @@
     justify-content: center;
     cursor: pointer;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.88), 0 0 18px rgba(212, 175, 55, 0.25);
-    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   }
 
   .nav-circle-btn:hover:not(:disabled) {
-    transform: scale(1.08);
+    transform: scale(1.07);
     border-color: var(--gold-light);
     box-shadow: 0 10px 28px rgba(0, 0, 0, 0.95), 0 0 28px rgba(247, 228, 158, 0.65);
   }
@@ -500,25 +506,25 @@
     border-radius: 2px;
   }
 
-  /* Dropdown Panels (Map & Audio) */
   .hud-dropdown-panel {
     position: fixed;
-    top: 68px;
-    right: 20px;
+    inset-block-start: 70px;
+    inset-inline-end: 20px;
     width: min(340px, calc(100dvw - 32px));
-    max-height: calc(100dvh - 88px);
+    max-height: calc(100dvh - 96px);
     overflow-y: auto;
-    background: linear-gradient(160deg, rgba(24, 4, 8, 0.96) 0%, rgba(6, 2, 3, 0.98) 100%);
-    border: 1.5px solid var(--gold-primary);
+    overscroll-behavior: contain;
+    background: linear-gradient(160deg, rgba(22, 4, 8, 0.96) 0%, rgba(6, 2, 3, 0.98) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.75);
     border-radius: 14px;
     padding: 18px;
-    box-shadow: 0 25px 65px rgba(0, 0, 0, 0.95), 0 0 40px rgba(212, 175, 55, 0.25);
+    box-shadow: 0 25px 65px rgba(0, 0, 0, 0.95), 0 0 40px rgba(212, 175, 55, 0.22);
     backdrop-filter: blur(16px);
     pointer-events: auto;
     opacity: 0;
-    transform: translateY(-14px) scale(0.96);
+    transform: translateY(-12px) scale(0.96);
     visibility: hidden;
-    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
   }
 
   .hud-dropdown-panel.open {
@@ -531,15 +537,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-block-end: 1px solid rgba(212, 175, 55, 0.3);
+    border-block-end: 1px solid rgba(212, 175, 55, 0.28);
     padding-block-end: 10px;
-    margin-block-end: 10px;
+    margin-block-end: 12px;
   }
 
   .panel-header h3 {
     font-family: var(--font-serif);
-    font-size: 0.82rem;
-    letter-spacing: 0.22em;
+    font-size: 0.85rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
     color: var(--gold-light);
   }
 
@@ -547,45 +554,56 @@
     background: none;
     border: none;
     color: var(--gold-champagne);
-    font-size: 1rem;
     cursor: pointer;
-    opacity: 0.75;
+    min-width: 28px;
+    min-height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
   }
 
   .chapter-map-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
   }
 
   .chapter-jump-btn {
     width: 100%;
     background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(212, 175, 55, 0.22);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 8px;
-    padding: 8px 11px;
+    padding: 8px 10px;
     display: flex;
     align-items: center;
     gap: 10px;
-    text-align: left;
+    text-align: start;
     color: var(--gold-champagne);
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
   }
 
   .chapter-jump-btn:hover:not(:disabled) {
     background: linear-gradient(90deg, rgba(139, 0, 24, 0.55), rgba(212, 175, 55, 0.15));
     border-color: var(--gold-light);
-    transform: translateX(4px);
+    transform: translateX(3px);
+  }
+
+  .chapter-jump-btn.active-chapter {
+    border-color: var(--gold-light);
+    background: rgba(139, 0, 24, 0.45);
   }
 
   .chapter-num {
-    font-family: var(--font-display);
+    font-family: var(--font-editorial);
     font-size: 0.82rem;
     color: var(--gold-primary);
-    min-width: 24px;
+    min-width: 26px;
     text-align: center;
+    display: flex;
+    justify-content: center;
   }
 
   .chapter-info {
@@ -595,8 +613,8 @@
 
   .chapter-info strong {
     font-family: var(--font-serif);
-    font-size: 0.75rem;
-    letter-spacing: 0.12em;
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
     color: var(--gold-light);
   }
 
@@ -604,19 +622,16 @@
     font-family: var(--font-ui);
     font-size: 0.62rem;
     color: rgba(250, 239, 215, 0.68);
-    margin-block-start: 2px;
   }
 
-  .slider-row {
-    margin-block-end: 14px;
-  }
+  .slider-row { margin-block-end: 14px; }
 
   .slider-label-row {
     display: flex;
     justify-content: space-between;
     font-family: var(--font-serif);
-    font-size: 0.72rem;
-    letter-spacing: 0.14em;
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
     color: var(--gold-champagne);
     margin-block-end: 6px;
   }
@@ -636,13 +651,13 @@
     color: var(--gold-light);
     font-family: var(--font-serif);
     font-size: 0.72rem;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     cursor: pointer;
   }
 
   /* =========================================================
-     3D SPATIAL BALLROOM CORRIDOR (`perspective: 1200px`)
+     SPACIOUS 12-STATION 3D BALLROOM Z-CORRIDOR
      ========================================================= */
   .spatial-corridor {
     position: fixed;
@@ -650,7 +665,7 @@
     width: 100dvw;
     height: 100dvh;
     z-index: 15;
-    perspective: 1200px;
+    perspective: 1150px;
     transform-style: preserve-3d;
     overflow: hidden;
   }
@@ -663,7 +678,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 58px 24px 68px;
+    padding: 64px 28px 56px;
     transform-style: preserve-3d;
     will-change: transform, opacity;
     pointer-events: none;
@@ -675,24 +690,29 @@
 
   .station-inner {
     width: 100%;
-    max-width: 1200px;
-    max-height: calc(100dvh - 126px);
+    max-width: 1140px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
 
+  .centered-showcase {
+    gap: clamp(14px, 2.2dvh, 26px);
+    text-align: center;
+  }
+
   /* =========================================================
-     CLEAN BAROQUE FRAME SILHOUETTES (NO RECTANGULAR CARD BOXES!)
+     PHYSICAL BAROQUE GLASS & STUDIO PHOTO INTEGRATION
      ========================================================= */
-  /* Trims the outer damask wallpaper off `baroque_rect_frame.jpg` so ONLY the carved 24k gold frame & beveled mirror appear */
-  .trimmed-rect-img {
+  .frame-bezel-overlay {
+    position: relative;
+    z-index: 3;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
-    clip-path: inset(7% 6.6% 8.6% 6.6% round 14px);
+    pointer-events: none;
   }
 
   .clean-cutout-img {
@@ -702,44 +722,46 @@
     display: block;
   }
 
+  .portrait-photo-graded {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 14%;
+    display: block;
+    filter: sepia(0.08) contrast(1.06) saturate(1.12) brightness(0.9);
+  }
+
   .inspectable-frame {
     cursor: pointer;
     transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), filter 0.35s ease;
-    filter: drop-shadow(0 24px 55px rgba(0, 0, 0, 0.95));
+    filter: drop-shadow(0 24px 55px rgba(0, 0, 0, 0.94));
   }
 
   .inspectable-frame:hover {
-    transform: translateY(-4px) scale(1.025);
-    filter: drop-shadow(0 30px 65px rgba(0, 0, 0, 0.98)) drop-shadow(0 0 36px rgba(212, 175, 55, 0.45));
+    transform: translateY(-4px) scale(1.02);
+    filter: drop-shadow(0 30px 65px rgba(0, 0, 0, 0.98)) drop-shadow(0 0 36px rgba(212, 175, 55, 0.42));
   }
 
   /* =========================================================
-     SECTION HEADINGS
+     REFINED EDITORIAL TYPOGRAPHY & HEADINGS
      ========================================================= */
   .section-royal-heading {
     text-align: center;
-    margin-block-end: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
     text-shadow: 0 6px 24px rgba(0, 0, 0, 0.98);
   }
 
-  .section-royal-heading.compact-heading {
-    margin-block-end: 14px;
-  }
-
-  .heading-filigree {
-    display: block;
-    font-size: 1.05rem;
-    letter-spacing: 0.35em;
-    color: var(--gold-primary);
-    margin-block-end: 4px;
-  }
-
   .section-royal-heading h2 {
-    font-family: var(--font-display);
-    font-size: clamp(1.55rem, 1.1rem + 2.2vw, 2.65rem);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    background: linear-gradient(180deg, #fff9df 0%, #d4af37 55%, #8c6414 100%);
+    font-family: var(--font-editorial);
+    font-weight: 700;
+    font-size: clamp(1.85rem, 1.2rem + 2.6vw, 3.1rem);
+    letter-spacing: 0.06em;
+    line-height: 1.1;
+    text-wrap: balance;
+    background: linear-gradient(180deg, #fff9df 0%, #e7c96d 55%, #9c721b 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.95));
@@ -747,153 +769,173 @@
 
   .section-royal-heading p {
     font-family: var(--font-serif);
-    font-size: clamp(0.72rem, 0.6rem + 0.45vw, 0.92rem);
-    letter-spacing: 0.22em;
+    font-size: clamp(0.75rem, 0.65rem + 0.35vw, 0.95rem);
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--gold-champagne);
-    margin-block-start: 6px;
-    opacity: 0.92;
+    color: rgba(250, 239, 215, 0.88);
+    text-wrap: balance;
   }
 
-  /* =========================================================
-     STATION 0 (I): HERO — RHIAN JADE BIANZON & OVAL MASTERPIECE
-     ========================================================= */
-  .hero-station-layout {
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 32px;
-    align-items: center;
-  }
-
-  .hero-copy-column {
-    text-align: center;
-    padding: 16px;
-    background: radial-gradient(ellipse at center, rgba(10, 2, 4, 0.58) 0%, transparent 75%);
-  }
-
-  .royal-date-kicker {
+  .stage-chapter-kicker {
     font-family: var(--font-serif);
-    font-size: clamp(0.75rem, 0.62rem + 0.45vw, 0.98rem);
-    letter-spacing: 0.36em;
+    font-size: clamp(0.72rem, 0.62rem + 0.35vw, 0.9rem);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
     color: var(--gold-light);
-    margin-block-end: 8px;
     text-shadow: 0 4px 16px rgba(0, 0, 0, 0.98);
   }
 
-  .grand-debutante-title {
-    font-family: var(--font-script);
-    font-size: clamp(3.6rem, 2.4rem + 5.2vw, 6.6rem);
-    font-weight: 400;
-    background: linear-gradient(180deg, #fff9e2 0%, #f5e29c 45%, #d4af37 85%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.98));
-    line-height: 1.02;
-  }
-
-  .grand-debutante-surname {
-    font-family: var(--font-display);
-    font-size: clamp(1.25rem, 0.95rem + 1.5vw, 2.05rem);
-    letter-spacing: 0.38em;
-    color: var(--gold-light);
-    margin-block-start: -4px;
-    text-shadow: 0 6px 20px rgba(0, 0, 0, 0.98);
-  }
-
-  .grand-tagline {
+  .showcase-footnote {
     font-family: var(--font-serif);
-    font-size: clamp(0.82rem, 0.7rem + 0.5vw, 1.1rem);
-    letter-spacing: 0.42em;
-    color: var(--gold-champagne);
-    margin-block-start: 10px;
+    font-size: clamp(0.68rem, 0.6rem + 0.3vw, 0.84rem);
+    letter-spacing: 0.15em;
     text-transform: uppercase;
-  }
-
-  .gold-ornament-divider {
-    font-size: 1.15rem;
-    letter-spacing: 0.35em;
-    color: var(--gold-primary);
-    margin-block: 16px;
-  }
-
-  .verse-script {
-    font-family: var(--font-script);
-    font-size: clamp(1.65rem, 1.3rem + 1.4vw, 2.4rem);
-    color: var(--gold-light);
-    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.98);
-  }
-
-  .verse-sub {
-    font-family: var(--font-serif);
-    font-size: clamp(0.7rem, 0.6rem + 0.35vw, 0.85rem);
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--gold-champagne);
-    margin-block-start: 8px;
-    opacity: 0.9;
-  }
-
-  .hero-oval-column {
-    display: flex;
-    justify-content: center;
-  }
-
-  .frameless-oval-masterpiece {
-    position: relative;
-    width: min(460px, 52dvh);
-  }
-
-  .oval-mirror-interior {
-    position: absolute;
-    left: 31%;
-    right: 31%;
-    top: 29%;
-    bottom: 30%;
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 14px;
-    pointer-events: none;
-  }
-
-  .mirror-crown {
-    font-size: clamp(1.4rem, 2.2vw, 2rem);
-    color: var(--gold-primary);
-    margin-block-end: 6px;
-    filter: drop-shadow(0 0 14px rgba(212, 175, 55, 0.75));
-  }
-
-  .mirror-monogram {
-    font-family: var(--font-display);
-    font-size: clamp(1.1rem, 1.8vw, 1.65rem);
-    letter-spacing: 0.16em;
-    background: linear-gradient(180deg, #fff8dc, #d4af37);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .mirror-date {
-    font-family: var(--font-serif);
-    font-size: 0.68rem;
-    letter-spacing: 0.24em;
-    color: rgba(247, 228, 158, 0.85);
-    margin-block-start: 6px;
-    text-transform: uppercase;
+    color: rgba(247, 228, 158, 0.86);
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.98);
+    text-wrap: balance;
   }
 
   /* =========================================================
-     STATION 1 (II): COUNTDOWN & LOCATION SANCTUARY
+     STATION 0: GRAND TYPOGRAPHIC ENTRANCE
+     ========================================================= */
+  .hero-typo-sanctuary {
+    text-align: center;
+    padding: 32px 20px;
+    background: radial-gradient(ellipse at center, rgba(8, 2, 4, 0.56) 0%, transparent 72%);
+  }
+
+  .royal-kicker {
+    font-family: var(--font-serif);
+    font-size: clamp(0.75rem, 0.62rem + 0.45vw, 0.98rem);
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-block-end: 12px;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.98);
+  }
+
+  .hero-sculpture-name {
+    font-family: var(--font-script);
+    font-weight: 400;
+    font-size: clamp(4rem, 2.2rem + 7.2vw, 8.2rem);
+    line-height: 1.05;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.28em;
+    filter: drop-shadow(0 12px 34px rgba(0, 0, 0, 0.98));
+  }
+
+  .split-word {
+    display: inline-block;
+    background: linear-gradient(180deg, #fffbe8 0%, #f5df96 48%, #c59527 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding-inline: 0.06em;
+    will-change: transform, opacity;
+  }
+
+  .hero-surname {
+    font-family: var(--font-editorial);
+    font-weight: 700;
+    font-size: clamp(1.35rem, 0.9rem + 1.8vw, 2.35rem);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-block-start: -4px;
+    text-shadow: 0 6px 24px rgba(0, 0, 0, 0.98);
+  }
+
+  .gold-filigree-rule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    width: min(360px, 76dvw);
+    margin-block: 22px;
+  }
+
+  .rule-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.78), transparent);
+  }
+
+  .hero-tagline {
+    font-family: var(--font-serif);
+    font-size: clamp(0.85rem, 0.7rem + 0.55vw, 1.15rem);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold-champagne);
+  }
+
+  .hero-verse {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: clamp(1.1rem, 0.95rem + 0.7vw, 1.5rem);
+    color: rgba(250, 239, 215, 0.9);
+    max-width: 44ch;
+    margin-block-start: 10px;
+    text-wrap: pretty;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.98);
+  }
+
+  /* =========================================================
+     STATION 1: ROYAL OVAL PORTRAIT MIRROR (Rhian Jade Photo)
+     ========================================================= */
+  .frameless-oval-masterpiece {
+    position: relative;
+    width: min(460px, 82dvw, 56dvh);
+    aspect-ratio: 4 / 5;
+  }
+
+  .oval-portrait-window {
+    position: absolute;
+    z-index: 1;
+    left: 29%;
+    right: 29%;
+    top: 26.5%;
+    bottom: 27%;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .oval-portrait-window::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, transparent 48%, rgba(28, 3, 8, 0.52) 84%, rgba(8, 1, 3, 0.92) 100%);
+    box-shadow: inset 0 0 26px rgba(0, 0, 0, 0.85);
+    pointer-events: none;
+  }
+
+  .oval-name-caption {
+    position: absolute;
+    inset-inline: 28%;
+    bottom: 30%;
+    z-index: 4;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .oval-name-caption span {
+    font-family: var(--font-script);
+    font-size: clamp(1.3rem, 1rem + 1.2vw, 1.85rem);
+    color: var(--gold-light);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.98), 0 0 18px rgba(0, 0, 0, 0.95);
+  }
+
+  /* =========================================================
+     STATION 2: THE ROYAL COUNTDOWN
      ========================================================= */
   .countdown-frames-row {
     display: grid;
-    grid-template-columns: repeat(4, minmax(140px, 230px));
-    gap: 14px;
+    grid-template-columns: repeat(4, minmax(150px, 240px));
+    gap: 18px;
     width: 100%;
     justify-content: center;
-    margin-block-end: 22px;
   }
 
   .carved-rect-unit {
@@ -902,10 +944,11 @@
     filter: drop-shadow(0 20px 44px rgba(0, 0, 0, 0.95));
   }
 
-  .rect-mirror-interior {
+  .rect-glass-interior {
     position: absolute;
-    left: 20.5%;
-    right: 20.5%;
+    z-index: 2;
+    left: 21%;
+    right: 21%;
     top: 25.5%;
     bottom: 26%;
     display: flex;
@@ -913,14 +956,32 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 6px;
+    padding: 8px;
+  }
+
+  .rect-photo-window {
+    position: absolute;
+    z-index: 1;
+    left: 20.5%;
+    right: 20.5%;
+    top: 25%;
+    bottom: 25.5%;
+    overflow: hidden;
+  }
+
+  .rect-photo-window::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 45%, rgba(16, 2, 5, 0.65) 100%);
+    pointer-events: none;
   }
 
   .cd-gold-number {
-    font-family: var(--font-serif);
-    font-size: clamp(1.5rem, 1.1rem + 2vw, 2.55rem);
+    font-family: var(--font-editorial);
+    font-size: clamp(1.85rem, 1.2rem + 2.4vw, 3rem);
     font-weight: 700;
-    background: linear-gradient(180deg, #fff9df 0%, #d4af37 65%, #8c6414 100%);
+    background: linear-gradient(180deg, #fffbe8 0%, #d4af37 68%, #916714 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     line-height: 1.05;
@@ -929,19 +990,22 @@
 
   .cd-gold-label {
     font-family: var(--font-serif);
-    font-size: 0.62rem;
-    letter-spacing: 0.24em;
+    font-size: 0.66rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--gold-champagne);
-    margin-block-start: 3px;
+    margin-block-start: 4px;
   }
 
+  /* =========================================================
+     STATION 3: LOCATION SANCTUARY
+     ========================================================= */
   .location-sanctuary-trio {
     display: grid;
-    grid-template-columns: 250px 1fr 250px;
-    gap: 20px;
+    grid-template-columns: 270px 1fr 270px;
+    gap: 24px;
     width: 100%;
-    max-width: 980px;
+    max-width: 1020px;
     align-items: center;
   }
 
@@ -951,52 +1015,42 @@
   }
 
   .inline-qr-canvas {
-    width: 68px;
-    height: 68px;
+    width: 72px;
+    height: 72px;
     border: 1px solid var(--gold-primary);
-    margin-block-end: 4px;
+    margin-block-end: 5px;
   }
 
-  .venue-preview-interior {
-    padding: 0;
-    overflow: hidden;
-  }
-
-  .venue-inner-thumb {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  .mirror-caption {
+    font-family: var(--font-serif);
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-champagne);
   }
 
   .location-center-inscription {
     text-align: center;
-    padding: 14px 18px;
-    background: radial-gradient(ellipse at center, rgba(12, 2, 5, 0.72) 0%, transparent 80%);
+    padding: 18px 20px;
+    background: radial-gradient(ellipse at center, rgba(12, 2, 5, 0.68) 0%, transparent 78%);
     text-shadow: 0 6px 24px rgba(0, 0, 0, 0.98);
   }
 
-  .inscription-kicker {
-    font-family: var(--font-serif);
-    font-size: 0.72rem;
-    letter-spacing: 0.24em;
-    color: var(--gold-light);
-    margin-block-end: 6px;
-  }
-
   .inscription-venue {
-    font-family: var(--font-display);
-    font-size: clamp(1.25rem, 1rem + 1.2vw, 1.85rem);
-    letter-spacing: 0.16em;
+    font-family: var(--font-editorial);
+    font-size: clamp(1.45rem, 1rem + 1.5vw, 2.2rem);
+    letter-spacing: 0.06em;
     color: #ffffff;
-    margin-block-end: 6px;
+    text-wrap: balance;
+    margin-block-end: 8px;
   }
 
   .inscription-address {
     font-family: var(--font-body);
-    font-size: 1.1rem;
+    font-size: clamp(1.02rem, 0.92rem + 0.35vw, 1.25rem);
     color: var(--gold-champagne);
-    margin-block-end: 14px;
+    margin-block-end: 18px;
+    text-wrap: pretty;
   }
 
   .location-cta-group {
@@ -1010,43 +1064,43 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 24px;
+    padding: 11px 26px;
     border-radius: 999px;
     background: linear-gradient(135deg, #fff3b8 0%, #d4af37 50%, #8c6414 100%);
     color: #140205;
     font-family: var(--font-serif);
-    font-size: 0.72rem;
+    font-size: 0.74rem;
     font-weight: 700;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     text-decoration: none;
     border: 1.5px solid #fff8db;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.92), 0 0 24px rgba(212, 175, 55, 0.55);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.92), 0 0 24px rgba(212, 175, 55, 0.52);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
 
   .royal-gold-cta:hover:not(:disabled) {
     transform: translateY(-2px) scale(1.03);
-    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.96), 0 0 38px rgba(247, 228, 158, 0.9);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.96), 0 0 38px rgba(247, 228, 158, 0.88);
   }
 
   .royal-outline-cta {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 10px 20px;
+    padding: 11px 22px;
     border-radius: 999px;
-    background: rgba(20, 3, 7, 0.85);
+    background: rgba(18, 3, 6, 0.86);
     color: var(--gold-light);
     font-family: var(--font-serif);
-    font-size: 0.72rem;
+    font-size: 0.74rem;
     font-weight: 600;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     text-decoration: none;
     border: 1.5px solid var(--gold-primary);
-    transition: all 0.3s ease;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
   }
 
   .royal-outline-cta:hover {
@@ -1055,12 +1109,12 @@
   }
 
   /* =========================================================
-     STATION 2 (III): ROYAL PORTRAIT GALLERY & CINEMA
+     STATION 4: ROYAL PORTRAIT GALLERY & CINEMA
      ========================================================= */
   .royal-gallery-constellation {
     display: grid;
-    grid-template-columns: 1fr 1.45fr 1fr;
-    gap: 18px;
+    grid-template-columns: 1fr 1.35fr 1fr;
+    gap: 20px;
     width: 100%;
     align-items: center;
     perspective: 1100px;
@@ -1070,42 +1124,24 @@
     display: flex;
     flex-direction: column;
     gap: 14px;
-    transition: transform 0.5s ease;
   }
 
-  .gallery-wing.left-wing {
-    transform: rotateY(14deg);
-  }
-
-  .gallery-wing.right-wing {
-    transform: rotateY(-14deg);
-  }
+  .gallery-wing.left-wing { transform: rotateY(12deg); }
+  .gallery-wing.right-wing { transform: rotateY(-12deg); }
 
   .carved-gallery-frame {
     position: relative;
     aspect-ratio: 4 / 3;
   }
 
-  .mirror-monogram-sm {
-    font-family: var(--font-display);
-    font-size: clamp(0.95rem, 1.5vw, 1.35rem);
-    color: var(--gold-primary);
-    letter-spacing: 0.14em;
-  }
-
-  .mirror-caption {
-    font-family: var(--font-serif);
-    font-size: 0.64rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--gold-champagne);
-    margin-block-start: 4px;
-  }
-
   .carved-cinema-masterpiece {
     position: relative;
     aspect-ratio: 4 / 3;
     width: 100%;
+  }
+
+  .cinema-backdrop-still {
+    filter: sepia(0.18) brightness(0.38) contrast(1.1);
   }
 
   .cinema-play-emblem {
@@ -1118,47 +1154,33 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.15rem;
     margin-block-end: 8px;
     box-shadow: 0 0 24px rgba(212, 175, 55, 0.65);
   }
 
   .cinema-title {
-    font-size: clamp(0.9rem, 1.4vw, 1.25rem);
-  }
-
-  .cinema-timeline {
-    width: 82%;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-ui);
-    font-size: 0.62rem;
+    font-family: var(--font-editorial);
+    font-size: clamp(0.95rem, 0.8rem + 0.6vw, 1.3rem);
     color: var(--gold-light);
-    margin-block-start: 10px;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95);
   }
 
-  .timeline-bar {
-    flex: 1;
-    height: 3px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .timeline-fill {
-    width: 38%;
-    height: 100%;
-    background: linear-gradient(90deg, var(--crimson-bright), var(--gold-light));
+  .cinema-sub {
+    font-family: var(--font-serif);
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold-champagne);
+    margin-block-start: 4px;
   }
 
   /* =========================================================
-     STATION 3 (IV): ENCHANTED ROSE CLOCHE SANCTUARY
+     STATION 5: ENCHANTED ROSE CLOCHE SANCTUARY
      ========================================================= */
   .cloche-sanctuary-showcase {
     position: relative;
-    width: min(820px, 90dvw);
-    max-height: 54dvh;
+    width: min(860px, 92dvw);
+    max-height: 56dvh;
     aspect-ratio: 16 / 9;
     filter: drop-shadow(0 28px 65px rgba(0, 0, 0, 0.96));
   }
@@ -1171,50 +1193,21 @@
     pointer-events: none;
   }
 
-  .cloche-scroll-caption {
-    font-family: var(--font-serif);
-    font-size: clamp(0.68rem, 0.58rem + 0.35vw, 0.84rem);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold-light);
-    text-align: center;
-    margin-block-start: 14px;
-    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.98);
-  }
-
   /* =========================================================
-     STATIONS 4–7 (V–VIII): SEPARATE POP-ON-SCROLL 18S PLAQUES
+     STATIONS 6–9 & 11: BAROQUE PARCHMENT PLAQUES (18s & RSVP)
      ========================================================= */
-  .single-18-layout {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .stage-number-crest {
-    font-family: var(--font-serif);
-    font-size: clamp(0.75rem, 0.62rem + 0.4vw, 0.95rem);
-    font-weight: 700;
-    letter-spacing: 0.28em;
-    color: var(--gold-light);
-    margin-block-end: 8px;
-    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.98);
-  }
-
   .carved-parchment-plaque {
     position: relative;
-    height: min(78dvh, 690px);
+    height: min(74dvh, 660px);
     aspect-ratio: 3 / 4;
-    filter:
-      drop-shadow(0 30px 70px rgba(0, 0, 0, 0.96))
-      drop-shadow(0 0 38px rgba(212, 175, 55, 0.3));
+    filter: drop-shadow(0 30px 70px rgba(0, 0, 0, 0.96)) drop-shadow(0 0 38px rgba(212, 175, 55, 0.28));
   }
 
   .parchment-inner-area {
     position: absolute;
     left: 26.2%;
     right: 26.2%;
-    top: 25.2%;
+    top: 25.5%;
     bottom: 24.5%;
     display: flex;
     flex-direction: column;
@@ -1222,46 +1215,41 @@
     justify-content: space-between;
     text-align: center;
     color: var(--ink-burgundy);
-    padding: 4px 6px;
-  }
-
-  .parchment-crest {
-    font-size: 0.78rem;
-    letter-spacing: 0.22em;
-    color: var(--gold-dark);
+    padding: 6px 6px;
   }
 
   .parchment-heading {
-    font-family: var(--font-display);
-    font-size: clamp(1rem, 0.8rem + 0.75vw, 1.38rem);
+    font-family: var(--font-editorial);
+    font-weight: 700;
+    font-size: clamp(1.15rem, 0.9rem + 0.8vw, 1.55rem);
     color: var(--crimson-royal);
-    letter-spacing: 0.1em;
-    line-height: 1.05;
+    letter-spacing: 0.05em;
+    line-height: 1.08;
   }
 
   .parchment-sub {
     font-family: var(--font-body);
     font-style: italic;
-    font-size: clamp(0.7rem, 0.6rem + 0.28vw, 0.86rem);
+    font-size: clamp(0.75rem, 0.65rem + 0.3vw, 0.92rem);
     color: var(--ink-burgundy);
     border-block-end: 1px solid rgba(125, 90, 22, 0.45);
-    padding-block-end: 3px;
-    width: 94%;
+    padding-block-end: 4px;
+    margin-block-start: 2px;
+    width: 100%;
   }
 
   .parchment-18-grid {
     list-style: none;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2px 8px;
+    gap: 3px 10px;
     width: 100%;
-    text-align: left;
-    margin-block: 2px;
+    text-align: start;
   }
 
   .parchment-18-grid li {
     font-family: var(--font-body);
-    font-size: clamp(0.56rem, 0.44rem + 0.26vw, 0.72rem);
+    font-size: clamp(0.6rem, 0.48rem + 0.28vw, 0.78rem);
     font-weight: 600;
     color: #2b0308;
     white-space: nowrap;
@@ -1269,212 +1257,182 @@
 
   .parchment-18-grid li strong {
     font-family: var(--font-serif);
-    font-size: 0.88em;
+    font-size: 0.86em;
     color: var(--crimson-royal);
-    margin-inline-end: 2px;
+    margin-inline-end: 3px;
   }
 
   .parchment-footer-sig {
     font-family: var(--font-serif);
-    font-size: 0.5rem;
-    letter-spacing: 0.15em;
+    font-size: 0.52rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--crimson-royal);
     opacity: 0.85;
   }
 
   /* =========================================================
-     STATION 8 (IX): ATTIRE (3D ORBS) & ROYAL WAX-STAMP RSVP
+     STATION 10: ATTIRE & GIFT GUIDE (3D PBR SWATCH ORBS)
      ========================================================= */
-  .finale-station-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    align-items: center;
-    width: 100%;
-    padding-inline: 16px;
-  }
-
-  .attire-orbs-column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    min-width: 0;
-    width: 100%;
-  }
-
   .orbs-sanctuary-wrap {
-    width: 100%;
-    max-width: 480px;
-    background: transparent;
-    padding: 8px 6px;
+    width: min(720px, 92dvw);
+    padding: 8px 12px;
   }
 
   #orbs-canvas {
     width: 100%;
-    height: 175px;
+    height: clamp(140px, 24dvh, 210px);
     display: block;
-    filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.92));
+    filter: drop-shadow(0 20px 42px rgba(0, 0, 0, 0.92));
   }
 
   .orbs-caption-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-block-start: 6px;
-    text-shadow: 0 4px 14px rgba(0, 0, 0, 0.98);
+    gap: 16px;
+    margin-block-start: 10px;
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.98);
   }
 
-  .orbs-caption-row h4 {
+  .orbs-caption-row h3 {
     font-family: var(--font-serif);
-    font-size: 0.68rem;
-    letter-spacing: 0.16em;
+    font-size: clamp(0.7rem, 0.58rem + 0.35vw, 0.88rem);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
     color: var(--gold-light);
   }
 
   .orbs-caption-row p {
     font-family: var(--font-body);
-    font-size: 0.82rem;
-    color: var(--gold-champagne);
-    opacity: 0.88;
+    font-size: clamp(0.85rem, 0.76rem + 0.25vw, 1.02rem);
+    color: rgba(250, 239, 215, 0.88);
   }
 
   .gift-guide-note {
     font-family: var(--font-body);
     font-style: italic;
-    font-size: clamp(0.9rem, 0.78rem + 0.32vw, 1.05rem);
+    font-size: clamp(1rem, 0.88rem + 0.38vw, 1.22rem);
     color: var(--gold-champagne);
-    max-width: 480px;
-    margin-block-start: 12px;
-    text-shadow: 0 4px 14px rgba(0, 0, 0, 0.98);
+    max-width: 52ch;
+    text-wrap: pretty;
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.98);
   }
 
-  .rsvp-parchment-column {
-    display: flex;
-    justify-content: center;
-  }
-
-  .rsvp-plaque {
-    height: min(78dvh, 690px);
-  }
-
+  /* =========================================================
+     STATION 11: ROYAL WAX-STAMP RSVP FORM INSIDE PARCHMENT
+     ========================================================= */
   .rsvp-inner-form {
     justify-content: space-between;
-    gap: 2px;
+    gap: 4px;
   }
 
   .parchment-field {
     width: 100%;
-    text-align: left;
+    text-align: start;
   }
 
   .parchment-field label {
     display: block;
     font-family: var(--font-serif);
-    font-size: 0.48rem;
+    font-size: 0.52rem;
     font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     color: var(--crimson-royal);
-    margin-block-end: 1px;
+    margin-block-end: 2px;
   }
 
   .parchment-field input,
   .parchment-field select {
     width: 100%;
-    background: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.42);
     border: none;
-    border-block-end: 1px solid rgba(125, 90, 22, 0.65);
+    border-block-end: 1.5px solid rgba(125, 90, 22, 0.65);
     color: #2b0308;
     font-family: var(--font-body);
-    font-size: 0.76rem;
+    font-size: 0.88rem;
     font-weight: 600;
-    padding: 2px 4px;
+    padding: 3px 6px;
     outline: none;
   }
 
   .parchment-radio-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 5px;
+    gap: 6px;
     width: 100%;
   }
 
   .parchment-radio-pill {
     display: block;
     text-align: center;
-    padding: 3px 4px;
+    padding: 5px 6px;
     border: 1px solid rgba(125, 90, 22, 0.55);
     border-radius: 999px;
     font-family: var(--font-serif);
-    font-size: 0.46rem;
+    font-size: 0.52rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink-burgundy);
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 
-  .parchment-radio-pill input {
-    display: none;
-  }
+  .parchment-radio-pill input { display: none; }
 
   .parchment-radio-pill:has(:checked) {
     background: var(--crimson-royal);
     border-color: var(--gold-dark);
     color: var(--gold-light);
-    box-shadow: 0 2px 8px rgba(139, 0, 24, 0.45);
+    box-shadow: 0 2px 10px rgba(139, 0, 24, 0.45);
   }
 
   .wax-stamp-zone {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-block-start: 1px;
+    margin-block-start: 2px;
   }
 
   .brass-stamp-handle {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     background: linear-gradient(90deg, #5e420e 0%, #f7e49e 45%, #d4af37 65%, #4a3205 100%);
-    border-radius: 12px 12px 5px 5px;
+    border-radius: 14px 14px 6px 6px;
     border: 1px solid var(--gold-light);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
-    margin-block-end: -6px;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.72);
+    margin-block-end: -7px;
     z-index: 3;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #3a2402;
-    font-size: 0.7rem;
     transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .wax-stamp-zone.stamping .brass-stamp-handle {
-    transform: translateY(10px) scale(0.92);
+    transform: translateY(12px) scale(0.92);
   }
 
   .molten-wax-btn {
-    width: 64px;
-    height: 64px;
+    width: 72px;
+    height: 72px;
     border-radius: 47% 53% 51% 49% / 52% 46% 54% 48%;
     background: radial-gradient(circle at 35% 35%, #ff2a4b 0%, #9e001a 52%, #4a000b 90%);
-    border: 1.5px solid var(--gold-primary);
-    box-shadow:
-      0 6px 16px rgba(0, 0, 0, 0.85),
-      0 0 14px rgba(184, 15, 40, 0.55),
-      inset 0 2px 5px rgba(255, 190, 190, 0.45);
+    border: 2px solid var(--gold-primary);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.85), 0 0 16px rgba(184, 15, 40, 0.55);
     color: var(--gold-light);
     font-family: var(--font-serif);
-    font-size: 0.42rem;
+    font-size: 0.46rem;
     font-weight: 700;
     letter-spacing: 0.08em;
+    text-transform: uppercase;
     text-align: center;
-    padding: 4px;
+    padding: 5px;
     cursor: pointer;
-    transition: all 0.3s ease;
     z-index: 2;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
 
   .molten-wax-btn.sealed {
@@ -1484,72 +1442,38 @@
   }
 
   /* =========================================================
-     BOTTOM CHAPTER DOTS & WALKTHROUGH HINT BAR
+     MINIMAL BOTTOM SCROLL HINT (Zero Roman Numerals!)
      ========================================================= */
-  .station-context-bar {
+  .walk-affordance {
     position: fixed;
-    inset-block-end: 14px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 75;
+    inset-block-end: 18px;
+    inset-inline: 0;
+    z-index: 70;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    gap: 10px;
+    padding-inline: 16px;
     pointer-events: none;
-    width: 94dvw;
-  }
-
-  .station-dots-nav {
-    display: flex;
-    gap: 6px;
-    pointer-events: auto;
-    background: rgba(10, 2, 4, 0.78);
-    border: 1px solid rgba(212, 175, 55, 0.4);
-    border-radius: 999px;
-    padding: 4px 10px;
-    backdrop-filter: blur(8px);
-  }
-
-  .station-dot {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    border: 1px solid transparent;
-    background: transparent;
-    color: rgba(250, 239, 215, 0.65);
-    font-family: var(--font-serif);
-    font-size: 0.62rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s ease;
-  }
-
-  .station-dot.active,
-  .station-dot:hover:not(:disabled) {
-    background: linear-gradient(135deg, var(--crimson-royal), #3a020a);
-    border-color: var(--gold-light);
-    color: var(--gold-light);
-    box-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
-  }
-
-  .scroll-walk-hint {
-    display: flex;
-    align-items: center;
-    gap: 8px;
     font-family: var(--font-ui);
-    font-size: clamp(0.58rem, 0.5rem + 0.25vw, 0.68rem);
-    letter-spacing: 0.18em;
+    font-size: clamp(0.62rem, 0.54rem + 0.22vw, 0.72rem);
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: rgba(250, 239, 215, 0.7);
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95);
+    color: rgba(250, 239, 215, 0.72);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.98);
+    transition: opacity 0.6s ease;
+  }
+
+  .walk-affordance.hidden-after-scroll {
+    opacity: 0;
   }
 
   .mouse-wheel-icon {
-    width: 12px;
-    height: 18px;
+    width: 14px;
+    height: 22px;
+    flex-shrink: 0;
     border: 1.5px solid var(--gold-primary);
-    border-radius: 6px;
+    border-radius: 7px;
     position: relative;
     display: inline-block;
   }
@@ -1557,7 +1481,7 @@
   .mouse-wheel-icon::after {
     content: '';
     position: absolute;
-    top: 3px;
+    top: 4px;
     left: 50%;
     transform: translateX(-50%);
     width: 2px;
@@ -1568,8 +1492,8 @@
   }
 
   @keyframes wheelScroll {
-    0% { top: 3px; opacity: 1; }
-    100% { top: 10px; opacity: 0; }
+    0% { top: 4px; opacity: 1; }
+    100% { top: 12px; opacity: 0; }
   }
 
   /* =========================================================
@@ -1580,7 +1504,7 @@
     border: none;
     background: transparent;
     padding: 0;
-    width: min(580px, 92dvw);
+    width: min(560px, 92dvw);
     max-height: 90dvh;
     overflow-y: auto;
     color: var(--gold-champagne);
@@ -1594,7 +1518,7 @@
   .frameless-rsvp-sanctuary {
     position: relative;
     padding: 32px 24px 26px;
-    background: radial-gradient(ellipse at top, rgba(90, 5, 18, 0.55) 0%, rgba(8, 2, 4, 0.95) 75%);
+    background: radial-gradient(ellipse at top, rgba(90, 5, 18, 0.58) 0%, rgba(8, 2, 4, 0.96) 75%);
     border-block: 2px solid var(--gold-light);
     box-shadow: 0 30px 90px rgba(0, 0, 0, 0.95), 0 0 60px rgba(212, 175, 55, 0.25);
     text-align: center;
@@ -1607,49 +1531,52 @@
     background: none;
     border: 1px solid rgba(212, 175, 55, 0.45);
     color: var(--gold-light);
-    width: 32px;
-    height: 32px;
+    min-width: 34px;
+    min-height: 34px;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 0.85rem;
-  }
-
-  .rsvp-ornament-top {
-    font-size: 1.15rem;
-    letter-spacing: 0.35em;
-    color: var(--gold-primary);
-    margin-block-end: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .rsvp-sanctuary-title {
-    font-family: var(--font-display);
-    font-size: clamp(1.35rem, 1rem + 1.6vw, 2rem);
-    letter-spacing: 0.2em;
+    font-family: var(--font-editorial);
+    font-size: clamp(1.35rem, 1rem + 1.5vw, 1.95rem);
+    letter-spacing: 0.06em;
     background: linear-gradient(135deg, #fff6c7, #d4af37, #9e731b);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-transform: uppercase;
   }
 
   .rsvp-sanctuary-subtitle {
     font-family: var(--font-serif);
-    font-size: 0.74rem;
-    letter-spacing: 0.18em;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
     color: rgba(250, 239, 215, 0.85);
     text-transform: uppercase;
     margin-block: 6px 18px;
   }
 
-  .lightbox-oval-img {
-    max-width: 260px;
-    margin-inline: auto;
+  .lightbox-frame-preview {
+    display: flex;
+    justify-content: center;
+  }
+
+  .lightbox-portrait-img {
+    max-width: min(380px, 76dvw);
+    max-height: 62dvh;
+    object-fit: cover;
+    border: 2px solid var(--gold-primary);
+    box-shadow: 0 20px 55px rgba(0, 0, 0, 0.95), 0 0 32px rgba(212, 175, 55, 0.3);
+    filter: sepia(0.06) contrast(1.04);
   }
 
   .venue-modal-body {
     display: flex;
     align-items: center;
     gap: 20px;
-    text-align: left;
+    text-align: start;
   }
 
   .venue-modal-details h3 {
@@ -1673,31 +1600,17 @@
   }
 
   /* =========================================================
-     RESPONSIVE MOBILE & TABLET LAYOUTS
+     RESPONSIVE MOBILE & TABLET REFINEMENTS
      ========================================================= */
-  @media (max-width: 920px) {
-    .hero-station-layout {
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    .frameless-oval-masterpiece {
-      width: min(290px, 38dvh);
-    }
-
-    .gold-ornament-divider {
-      margin-block: 6px;
-    }
-
+  @media (max-width: 900px) {
     .countdown-frames-row {
-      grid-template-columns: repeat(2, minmax(130px, 185px));
-      gap: 10px;
-      margin-block-end: 12px;
+      grid-template-columns: repeat(2, minmax(135px, 195px));
+      gap: 12px;
     }
 
     .location-sanctuary-trio {
       grid-template-columns: 1fr;
-      gap: 10px;
+      gap: 14px;
     }
 
     .carved-location-frame {
@@ -1717,69 +1630,40 @@
     .gallery-center-column {
       grid-column: 1 / -1;
       order: -1;
-      max-width: 340px;
+      max-width: 310px;
       margin-inline: auto;
       width: 100%;
     }
-
-    .finale-station-layout {
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .gift-guide-note {
-      font-size: 0.82rem;
-    }
-
-    .rsvp-plaque {
-      height: min(74dvh, 620px);
-    }
   }
 
-  @media (max-width: 680px) {
+  @media (max-width: 600px) {
     .spatial-station {
-      padding: 50px 12px 62px;
-    }
-
-    .finale-station-layout {
-      grid-template-columns: 1fr;
-      gap: 6px;
-    }
-
-    .attire-orbs-column .section-royal-heading,
-    .gift-guide-note {
-      display: none;
-    }
-
-    #orbs-canvas {
-      height: 76px;
-    }
-
-    .orbs-caption-row {
-      gap: 4px;
-    }
-
-    .orbs-caption-row h4 {
-      font-size: 0.54rem;
-      letter-spacing: 0.08em;
-    }
-
-    .orbs-caption-row p {
-      font-size: 0.66rem;
+      padding: 58px 14px 48px;
     }
 
     .carved-parchment-plaque {
-      height: min(68dvh, 520px);
+      height: min(70dvh, 520px);
       max-width: 92dvw;
     }
 
-    .rsvp-plaque {
-      height: min(60dvh, 490px);
+    .orbs-caption-row {
+      gap: 8px;
     }
+
+    .orbs-caption-row h3 { font-size: 0.6rem; letter-spacing: 0.08em; }
+    .orbs-caption-row p { font-size: 0.72rem; }
 
     .venue-modal-body {
       flex-direction: column;
       text-align: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .entrance-hint,
+    .seal-glow-ring,
+    .mouse-wheel-icon::after {
+      animation: none;
     }
   }
 }
